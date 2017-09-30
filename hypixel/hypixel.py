@@ -1,5 +1,5 @@
 # pylint: disable=C0103
-# Simple Hypixel-API in Python, by Snuggle v0.3 | 2017-09-29
+# Simple Hypixel-API in Python, by Snuggle v0.3.2 | 2017-09-29
 
 import json
 from random import choice
@@ -9,7 +9,6 @@ import requests # TODO: Check that this module is/has been imported.
 from hypixel import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
-SKIN_API_URL = 'https://visage.surgeplay.com/' # NOTE: Not sure if this'll be kept.
 
 verified_api_keys = []
 
@@ -41,7 +40,7 @@ class Player:
             JSON = self.JSON
             uuid = JSON['player']['uuid'] # Pretend that nothing happened.
 
-    def getJSON(self):
+    def getJSON(self, *args):
         typeOfRequest = 'uuid'
         api_key = choice(verified_api_keys) # Select a random API key from the list available.
         UUID = self.UUID
@@ -59,12 +58,29 @@ class Player:
             raise HypixelAPIError(response)
 
     def getPlayerInfo(self):
-        # TODO: Return a dictionary of basic player information. {uuid: 'xxx', username: 'Snuggle', networkLevel: '32'}
-        print("test")
+        JSON = self.JSON
+        if JSON is None: # If the player's JSON hasn't been fetched...
+            print("\nLookupError: hypixel-python\\Player\\getPlayerInfo: Need to fetch player's JSON data first.")
+            raise LookupError
+        playerInfo = {}
+        playerInfo['uuid'] = self.UUID
+        playerInfo['displayName'] = Player.getName(self)
+        playerInfo['rank'] = Player.getRank(self)
+        playerInfo['networkLevel'] = Player.getLevel(self)
+        JSONKeys = ['karma', 'firstLogin', 'lastLogin', 'mcVersionRp', 'networkExp']
+        for item in JSONKeys:
+            try:
+                playerInfo[item] = JSON['player'][item]
+            except KeyError:
+                pass
+        return playerInfo
 
-    def getUsername(self):
-        # TODO: Convert UUID to player-name.
-        raise NotImplementedError
+    def getName(self):
+        JSON = self.JSON
+        if JSON is None: # If the player's JSON hasn't been fetched...
+            print("\nLookupError: hypixel-python\\Player\\getUsername: Need to fetch player's JSON data first.")
+            raise LookupError
+        return JSON['player']['displayname']
 
     def getLevel(self):
         # TODO: Calculate level using global network experience.
@@ -84,7 +100,6 @@ class Player:
         myoutput = leveling.getExactLevel(exp)
         return myoutput
         
-
     def getRank(self):
         """ This function returns a player's rank, from their data. """
         JSON = self.JSON
@@ -104,10 +119,33 @@ class Player:
                     dirtyRank = dirtyRank.replace("_", " ").replace("Mvp", "MVP").replace("Vip", "VIP") # pylint: disable=line-too-long
                     playerRank['rank'] = dirtyRank.replace(" Plus", "+")
 
+        if 'rank' not in playerRank:
+            playerRank['rank'] = 'Non'
+
         return playerRank
 
-    def getSkinRender(self, size):
-        # FIXME/TODO/XXX - Don't run this.
+    def getGuildID(self):
         UUID = self.UUID
-        url = 'https://visage.surgeplay.com/full/{}/{}'.format(size, UUID)
-        return url
+        api_key = choice(verified_api_keys) # Select a random API key from the list available.
+        response = requests.get(HYPIXEL_API_URL + 'findGuild?key={}&byUuid={}'.format(api_key, UUID))
+        response = response.json()
+        if response['success'] is True:
+            return response['guild']
+        else:
+            raise HypixelAPIError(response)
+
+class Guild:
+    GuildID = None
+    def __init__(self, GuildID):
+        if len(GuildID) == '24':
+            self.GuildID = GuildID
+
+    def getJSON(self):
+        GuildID = self
+        api_key = choice(verified_api_keys) # Select a random API key from the list available.
+        response = requests.get(HYPIXEL_API_URL + 'guild?key={}&id={}'.format(api_key, GuildID))
+        response = response.json()
+        if response['success'] is True:
+            return response
+        else:
+            raise HypixelAPIError(response)

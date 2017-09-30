@@ -1,5 +1,6 @@
 # To prevent accidents.
 test.py
+READ.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
