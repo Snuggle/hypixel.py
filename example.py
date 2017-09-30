@@ -1,6 +1,6 @@
 # Placeholder
 
-from hypixel import hypixel
+import hypixel
 
 API_KEYS = ['API_KEY_HERE_PLS', 'ANOTHER_API_KEY?']
 hypixel.setKeys(API_KEYS)

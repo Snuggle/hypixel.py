@@ -9,4 +9,14 @@ setup(name='hypixel',
       install_requires=['requests'],
       py_modules = ['hypixel', 'leveling'],
       python_requires='>=3',
-      zip_safe=False)
+      classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Games/Entertainment',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Utilities',
+      ]
+)
