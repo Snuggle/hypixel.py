@@ -1,1 +1,1 @@
-import hypixel
+from Hypixel import *

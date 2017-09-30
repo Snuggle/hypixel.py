@@ -1,12 +1,12 @@
 # pylint: disable=C0103
-# Simple Hypixel-API in Python, by Snuggle v0.3.2 | 2017-09-29
+# Simple Hypixel-API in Python, by Snuggle v0.4.0 | 2017-09-30
 
 import json
 from random import choice
 
-import requests # TODO: Check that this module is/has been imported.
+import requests
 
-from hypixel import leveling
+import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
 
@@ -96,8 +96,8 @@ class Player:
             networkLevel = JSON['player']['networkLevel']
         except KeyError:
             networkLevel = 0
-        exp = leveling.getExperience(networkExp, networkLevel)
-        myoutput = leveling.getExactLevel(exp)
+        exp = Leveling.getExperience(networkExp, networkLevel)
+        myoutput = Leveling.getExactLevel(exp)
         return myoutput
         
     def getRank(self):
