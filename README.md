@@ -13,8 +13,8 @@
              alt="PyPi Version">
     </a>
     <a href="https://pypi.org/project/hypixel/" style="text-decoration: none">
-        <img src="https://img.shields.io/pypi/dm/Django.svg?colorA=2d2306&colorB=705810"
-             alt="PiPi Downloads">
+        <img src="https://img.shields.io/travis/SnuggIes/hypixel.py.svg?colorA=2d2306&colorB=705810"
+             alt="Travis Ci Build">
     </a>
     <a href="https://pypi.org/project/hypixel/" style="text-decoration: none">
         <img src="https://img.shields.io/pypi/pyversions/hypixel.svg?colorA=2d2306&colorB=705810"
@@ -31,5 +31,8 @@ Designed for use with Python 3.6. Should work with most Python 3.\* versions.
 
 ## How to install
 
-The easiest way to install this package is using "pip install hypixel-python"...
+The easiest way to install this package is using `pip install hypixel-python`. Once hypixel.py has been installed by pip, please put `import hypixel` at the top of your code.
 
+## What can you do?
+
+### To be added. At the moment, see "Examples" folder for example code. c:

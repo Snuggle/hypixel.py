@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='hypixel',
-      version='0.4.1',
+      version='0.4.2',
       description='This is a simple, unofficial library for getting values from the public Hypixel-API in Python.',
       url='https://github.com/SnuggIes/hypixel.py',
       author='Snuggle',

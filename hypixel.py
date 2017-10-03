@@ -1,5 +1,6 @@
 """ Simple Hypixel-API in Python, by Snuggle v0.4.2 | 2017-09-30 to 2017-10-03 """
 # pylint: disable=C0103
+# TODO: Add more comments, saying what is happening. :p
 
 import json
 from random import choice
