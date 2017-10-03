@@ -1,4 +1,4 @@
-""" Simple Hypixel-API in Python, by Snuggle v0.4.1 | 2017-09-30 to 2017-10-03 """
+""" Simple Hypixel-API in Python, by Snuggle v0.4.2 | 2017-09-30 to 2017-10-03 """
 # pylint: disable=C0103
 
 import json
