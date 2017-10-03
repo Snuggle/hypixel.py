@@ -1,4 +1,5 @@
 # To prevent accidents.
+.assets/
 test.py
 READ.md
 

@@ -1,4 +1,4 @@
-# Placeholder
+"""# Placeholder"""
 
 import hypixel
 
