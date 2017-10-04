@@ -1,4 +1,5 @@
-""" Simple Hypixel-API in Python, by Snuggle v0.4.3 | 2017-09-30 to 2017-10-04 """
+""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-04 """
+__version__ = '0.5.0'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.

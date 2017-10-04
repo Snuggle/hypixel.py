@@ -2,6 +2,7 @@
 .assets/
 READ.md
 development.py
+PKG-INFO
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

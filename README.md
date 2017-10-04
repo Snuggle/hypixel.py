@@ -27,7 +27,7 @@
 </p>
 
 This is a simple, unofficial Python library which allows you to get values from the Hypixel-API using a JSON request.
-Designed for use with Python 3.6. Should work with most Python 3.\* versions.
+Designed for use with Python 3.6. Should work with Python 3.3 or higher.
 
 ## How to install
 
