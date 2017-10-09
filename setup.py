@@ -44,6 +44,13 @@ class UploadCommand(Command):
 
         self.status('Uploading the package to PyPi via Twine…')
         os.system('twine upload dist/*')
+        self.status('Finished uploading to PyPi! Cleaning up.')
+        foldersToRemove = ['dist', 'build', 'hypixel.egg-info', '__pycache__']
+        for folder in foldersToRemove:
+            try:
+                rmtree(os.path.join(here, folder))
+            except OSError:
+                pass
 
         sys.exit()
 
