@@ -1,5 +1,5 @@
-""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-04 """
-__version__ = '0.5.0'
+""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-09 """
+__version__ = '0.5.1'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
@@ -24,13 +24,48 @@ class HypixelAPIError(Exception):
     """ Simple exception if something's gone very wrong. Usually incorrect API keys. """
     pass
 
+def getJSON(typeOfRequest, **kwargs):
+        """ This function is used for getting JSON from Hypixel's Public API. """
+
+        requestEnd = ''
+        if typeOfRequest == 'key':
+            api_key = kwargs['key']
+        else:
+            api_key = choice(verified_api_keys) # Select a random API key from the list available.
+
+            if typeOfRequest == 'player':
+                UUIDType = 'uuid'
+                uuid = kwargs['uuid']
+                if len(uuid) <= 16:
+                    UUIDType = 'name' # I could probably clean this up somehow.
+
+            for name, value in kwargs.items():
+                if typeOfRequest == "player" and name == "uuid":
+                    name = UUIDType
+                requestEnd += '&{}={}'.format(name,value)
+        
+        response = requests.get(HYPIXEL_API_URL + \
+                                '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd))
+        response = json.loads(response.text)
+
+        if response['success'] is False:
+                raise HypixelAPIError(response)
+        if typeOfRequest == 'player':        
+            if response['player'] is None:
+                raise PlayerNotFoundException(uuid)
+
+        try:
+            return response[typeOfRequest]
+        except KeyError:
+            return response
+
+
 def setKeys(api_keys):
     """ This function is used to set your Hypixel API keys.
         It also checks that they are valid/working. """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
-            response = requests.get(HYPIXEL_API_URL + 'key?key={}'.format(api_key))
-            response = json.loads(response.text)
+            response = getJSON('key', key=api_key)
             if response['success'] is True:
                 verified_api_keys.append(api_key)
             else:
@@ -49,28 +84,10 @@ class Player:
         """ This is called whenever someone uses hypixel.Player('Snuggle').
             Get player's UUID, if it's a username. Get Hypixel-API data. """
         self.UUID = UUID
-        self.getJSON() # Get player's Hypixel-API JSON information.
+        self.JSON = getJSON('player', uuid=UUID) # Get player's Hypixel-API JSON information.
         if len(UUID) <= 16: # If the UUID isn't actually a UUID... *rolls eyes* Lazy people.
             JSON = self.JSON
             self.UUID = JSON['uuid'] # Pretend that nothing happened and get the UUID from the API.
-
-    def getJSON(self):
-        """ This function is used for getting JSON from Hypixel's Public API. """
-        UUIDType = 'uuid'
-        api_key = choice(verified_api_keys) # Select a random API key from the list available.
-        UUID = self.UUID
-        if len(UUID) <= 16:
-            UUIDType = 'name'
-        response = requests.get(HYPIXEL_API_URL + \
-                                'player?key={}&{}={}'.format(api_key, UUIDType, UUID))
-        response = response.json()
-        if response['success'] is True:
-            if response['player'] is None:
-                raise PlayerNotFoundException(UUID)
-            else:
-                self.JSON = response['player']
-        else:
-            raise HypixelAPIError(response)
 
     def getPlayerInfo(self):
         """ This is a simple function to return a bunch of common data about a player. """
@@ -133,25 +150,18 @@ class Player:
         """ This function is used to get a GuildID from a player. """
         UUID = self.UUID
         api_key = choice(verified_api_keys) # Select a random API key from those available.
-        response = requests.get(HYPIXEL_API_URL + \
-                            'findGuild?key={}&byUuid={}'.format(api_key, UUID))
-        response = response.json()
-        if response['success'] is True:
-            return response['guild']
-        else:
-            raise HypixelAPIError(response)
+        GuildID = getJSON('findGuild', byUuid=UUID)
+        return GuildID['guild']
 
     def getSession(self):
         """ This function is used to get a player's session information. """
         UUID = self.UUID
         api_key = choice(verified_api_keys) # Select a random API key from those available.
-        response = requests.get(HYPIXEL_API_URL + \
-                            'session?key={}&uuid={}'.format(api_key, UUID))
-        response = response.json()
-        if response['success'] is True:
-            return response['session']
-        else:
-            raise HypixelAPIError(response)
+        try:
+            session = getJSON('session', uuid=UUID)
+        except HypixelAPIError:
+            session = None
+        return session
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
@@ -161,18 +171,7 @@ class Guild:
     def __init__(self, GuildID):
         if len(GuildID) == 24:
             self.GuildID = GuildID
-            self.getJSON()
-
-    def getJSON(self):
-        """ This gets the guild's information from the Hypixel-API. """
-        GuildID = self.GuildID
-        api_key = choice(verified_api_keys) # Select a random API key from the list available.
-        response = requests.get(HYPIXEL_API_URL + 'guild?key={}&id={}'.format(api_key, GuildID))
-        response = response.json()
-        if response['success'] is True:
-            self.JSON = response['guild']
-        else:
-            raise HypixelAPIError(response)
+            self.JSON = getJSON('guild', id=GuildID)
 
     def getMembers(self):
         """ This function enumerates all the members in a guild.
