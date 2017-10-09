@@ -17,7 +17,7 @@ setup(name='hypixel',
       url='https://github.com/SnuggIes/hypixel.py',
       author='Snuggle',
       author_email='snuggle@sprinkly.net',
-      install_requires=['requests'],
+      install_requires=['grequests'],
       py_modules = ['hypixel', 'leveling'],
       python_requires='>=3.3',
       classifiers=[

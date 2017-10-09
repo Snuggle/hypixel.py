@@ -1,12 +1,12 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-09 """
-__version__ = '0.5.1'
+__version__ = '0.6.0'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
 
 import json
 from random import choice
-import requests
+import grequests
 
 import leveling
 
@@ -44,9 +44,11 @@ def getJSON(typeOfRequest, **kwargs):
                     name = UUIDType
                 requestEnd += '&{}={}'.format(name,value)
         
-        response = requests.get(HYPIXEL_API_URL + \
-                                '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd))
-        response = json.loads(response.text)
+        urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)]
+        requests = (grequests.get(u) for u in urls)
+        responses = grequests.map(requests)
+        for r in responses:
+            response = r.json()
 
         if response['success'] is False:
                 raise HypixelAPIError(response)
