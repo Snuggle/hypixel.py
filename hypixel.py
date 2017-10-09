@@ -186,8 +186,11 @@ class Guild:
             allGuildMembers[role] = [] # {MEMBER: [], OFFICER: [], GUILDMASTER: []}
 
         for member in memberDict: # For each member, use Mojang's API to get their username.
-            response = requests.get(MOJANG_SESSION_SERVER_URL + member['uuid'])
-            response = response.json()
+            urls = [MOJANG_SESSION_SERVER_URL + member['uuid']]
+            requests = (grequests.get(u) for u in urls)
+            responses = grequests.imap(requests)
+            for r in responses:
+                response = r.json()
             for role in guildRoles: # Then sort them into the correct place in allGuildMembers.
                 if member['rank'] == role:
                     allGuildMembers[role].append(response['name'])
