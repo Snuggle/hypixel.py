@@ -1,8 +1,11 @@
 """ Travis Ci Tests """
 import os
 import hypixel
+import time
 
 API_KEY = os.environ['apikey']
+
+start = time.time()
 
 hypixel.setKeys([API_KEY])
 Snuggle = hypixel.Player('8998bcff9765438bb6089ab93bfad4d3')
@@ -29,4 +32,7 @@ SnuggleGuildID = Snuggle.getGuildID()
 SnuggleGuild = hypixel.Guild(SnuggleGuildID)
 print("Snuggle's guild is called {}.".format(SnuggleGuild.JSON['name']))
 
-print("\nDone! All tests finished successfully.")
+end = time.time()
+totalTime=end-start
+
+print("\nDone! All tests finished successfully. Time taken: {}".format(totalTime))

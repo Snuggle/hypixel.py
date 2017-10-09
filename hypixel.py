@@ -46,7 +46,7 @@ def getJSON(typeOfRequest, **kwargs):
         
         urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)]
         requests = (grequests.get(u) for u in urls)
-        responses = grequests.map(requests)
+        responses = grequests.imap(requests)
         for r in responses:
             response = r.json()
 
