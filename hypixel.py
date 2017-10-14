@@ -1,5 +1,5 @@
-""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-09 """
-__version__ = '0.6.1'
+""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-14 """
+__version__ = '0.6.2'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
@@ -99,7 +99,7 @@ class Player:
         playerInfo['displayName'] = Player.getName(self)
         playerInfo['rank'] = Player.getRank(self)
         playerInfo['networkLevel'] = Player.getLevel(self)
-        JSONKeys = ['karma', 'firstLogin', 'lastLogin', 'mcVersionRp', 'networkExp']
+        JSONKeys = ['karma', 'firstLogin', 'lastLogin', 'mcVersionRp', 'networkExp', 'socialMedia']
         for item in JSONKeys:
             try:
                 playerInfo[item] = JSON[item]
