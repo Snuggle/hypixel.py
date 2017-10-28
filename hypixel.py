@@ -82,7 +82,13 @@ def cleanCache():
             
 
 def setCacheTime(seconds):
-    """ This function sets how long the request cache should last, in seconds. """
+    """ This function sets how long the request cache should last, in seconds. 
+
+        Parameters
+        -----------
+        seconds : float
+            How long you would like Hypixel-API requests to be cached for.
+    """
     try:
         global cacheTime
         cacheTime = float(seconds)
@@ -92,7 +98,13 @@ def setCacheTime(seconds):
 
 def setKeys(api_keys):
     """ This function is used to set your Hypixel API keys.
-        It also checks that they are valid/working. """
+        It also checks that they are valid/working.
+
+        Parameters
+        -----------
+        api_keys : list
+            A list of the API keys that you would like to use. Example: `['740b8cf8-8aba-f2ed-f7b109119d28']`. 
+    """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
             response = getJSON('key', key=api_key)
@@ -105,7 +117,16 @@ def setKeys(api_keys):
 
 class Player:
     """ This class represents a player on Hypixel as a single object.
-        A player has a UUID, a username, statistics etc. """
+        A player has a UUID, a username, statistics etc. 
+        
+        Attributes
+        -----------
+        JSON : string
+            The raw JSON receieved from the Hypixel API.
+
+        UUID : string
+            The player's UUID.
+    """
 
     JSON = None
     UUID = None
@@ -195,7 +216,23 @@ class Player:
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
-        A guild has a name, members etc. """
+        A guild has a name, members etc. 
+        
+        Parameters
+        -----------
+        GuildID : string
+            The ID for a Guild. This can be found by using `Hypixel.getGuildID()`.
+            
+            
+        Attributes
+        -----------
+        JSON : string
+            The raw JSON receieved from the Hypixel API.
+
+        GuildID : string
+            The Guild's GuildID.
+            
+    """
     JSON = None
     GuildID = None
     def __init__(self, GuildID):
