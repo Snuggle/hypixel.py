@@ -1,5 +1,5 @@
-""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-14 """
-__version__ = '0.6.3'
+""" Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
+__version__ = '0.6.5'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
@@ -7,6 +7,7 @@ __version__ = '0.6.3'
 import json
 from random import choice
 import grequests
+from time import time
 
 import leveling
 
@@ -15,6 +16,9 @@ MOJANG_SESSION_SERVER_URL = "https://sessionserver.mojang.com/session/minecraft/
 
 HYPIXEL_API_KEY_LENGTH = 36 # This is the length of a Hypixel-API key. Don't change from 36.
 verified_api_keys = []
+
+requestCache = {}
+cacheTime = 60
 
 class PlayerNotFoundException(Exception):
     """ Simple exception if a player/UUID is not found. """
@@ -25,8 +29,7 @@ class HypixelAPIError(Exception):
     pass
 
 def getJSON(typeOfRequest, **kwargs):
-        """ This function is used for getting JSON from Hypixel's Public API. """
-
+        """ This private function is used for getting JSON from Hypixel's Public API. """
         requestEnd = ''
         if typeOfRequest == 'key':
             api_key = kwargs['key']
@@ -44,23 +47,48 @@ def getJSON(typeOfRequest, **kwargs):
                     name = UUIDType
                 requestEnd += '&{}={}'.format(name,value)
         
-        urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)]
-        requests = (grequests.get(u) for u in urls)
-        responses = grequests.imap(requests)
-        for r in responses:
-            response = r.json()
+        cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd)
+        urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+        if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time(): # If url exists in request cache, and time hasn't expired...
+            response = requestCache[cacheURL]['data']
+        else:
+            requests = (grequests.get(u) for u in urls)
+            responses = grequests.imap(requests)
+            for r in responses:
+                response = r.json()
 
-        if response['success'] is False:
-                raise HypixelAPIError(response)
-        if typeOfRequest == 'player':        
-            if response['player'] is None:
-                raise PlayerNotFoundException(uuid)
-
+            if response['success'] is False:
+                    raise HypixelAPIError(response)
+            if typeOfRequest == 'player':        
+                if response['player'] is None:
+                    raise PlayerNotFoundException(uuid)
+            if typeOfRequest != 'key': # Don't cache key requests.
+                requestCache[cacheURL] = {}
+                requestCache[cacheURL]['data'] = response
+                requestCache[cacheURL]['cacheTime'] = time() + cacheTime # Cache request and clean current cache.
+                cleanCache()
         try:
             return response[typeOfRequest]
         except KeyError:
             return response
 
+def cleanCache():
+    itemsToRemove = []
+    for item in requestCache:
+        if requestCache[item]['cacheTime'] < time():
+            itemsToRemove.append(item)
+    for item in itemsToRemove:
+        requestCache.pop(item)
+            
+
+def setCacheTime(seconds):
+    """ This function sets how long the request cache should last, in seconds. """
+    try:
+        global cacheTime
+        cacheTime = float(seconds)
+        return "Cache time has been successfully set to {} seconds.".format(cacheTime)
+    except ValueError as chainedException:
+        raise HypixelAPIError("Invalid cache time \"{}\"".format(seconds)) from chainedException
 
 def setKeys(api_keys):
     """ This function is used to set your Hypixel API keys.
@@ -196,3 +224,7 @@ class Guild:
                     allGuildMembers[role].append(response['name'])
 
         return allGuildMembers
+
+if __name__ == "__main__":
+    print("This is a Python library and shouldn't be run directly.\n"
+          "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
