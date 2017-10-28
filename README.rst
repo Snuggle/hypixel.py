@@ -3,7 +3,7 @@ Hypixel: Python wrapper for the Hypixel-API.
 
 .. image:: https://i.imgur.com/eFWzNiy.png
     :target: https://github.com/SnuggIes/hypixel.py
-    :alt: Hypixel.py Logo
+    :alt: hypixel.py Logo
     
 
 

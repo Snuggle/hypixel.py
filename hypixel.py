@@ -21,11 +21,12 @@ requestCache = {}
 cacheTime = 60
 
 class PlayerNotFoundException(Exception):
-    """ Simple exception if a player/UUID is not found. """
+    """ Simple exception if a player/UUID is not found. This exception can usually be ignored.
+        You can catch this exception with ``except hypixel.PlayerNotFoundException:`` """
     pass
 
 class HypixelAPIError(Exception):
-    """ Simple exception if something's gone very wrong. Usually incorrect API keys. """
+    """ Simple exception if something's gone very wrong and the program shouldn't be able to continue. Usually incorrect API keys. """
     pass
 
 def getJSON(typeOfRequest, **kwargs):
@@ -83,7 +84,7 @@ def cleanCache():
 
 def setCacheTime(seconds):
     """ This function sets how long the request cache should last, in seconds. 
-
+    
         Parameters
         -----------
         seconds : float
@@ -100,10 +101,17 @@ def setKeys(api_keys):
     """ This function is used to set your Hypixel API keys.
         It also checks that they are valid/working.
 
+        Raises
+        ------ 
+        HypixelAPIError
+            If any of the keys are invalid or don't work, this will be raised.
+
         Parameters
         -----------
         api_keys : list
-            A list of the API keys that you would like to use. Example: `['740b8cf8-8aba-f2ed-f7b109119d28']`. 
+            A list of the API keys that you would like to use. 
+            
+            Example: ``['740b8cf8-8aba-f2ed-f7b10119d28']``. 
     """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
@@ -118,6 +126,16 @@ def setKeys(api_keys):
 class Player:
     """ This class represents a player on Hypixel as a single object.
         A player has a UUID, a username, statistics etc. 
+
+        Raises
+        ------ 
+        PlayerNotFoundException
+            If the player cannot be found, this will be raised.
+
+        Parameters
+        -----------
+        Username/UUID : string
+            Either the UUID or the username (Depreciated) for a Minecraft player.
         
         Attributes
         -----------
@@ -221,7 +239,7 @@ class Guild:
         Parameters
         -----------
         GuildID : string
-            The ID for a Guild. This can be found by using `Hypixel.getGuildID()`.
+            The ID for a Guild. This can be found by using :class:`Player.getGuildID()`.
             
             
         Attributes

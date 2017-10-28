@@ -1,13 +1,15 @@
 .. currentmodule:: hypixel
 
-.. toctree::
-   :maxdepth: 2
+.. api:
+
 
 
 API Reference
 ===============
 
-This section outlines the API of Hypixel.py.
+This section outlines the functions and methods that are available as part of `hypixel.py <https://github.com/Snuggle/hypixel.py>`_.
+
+It is automatically generated and updated from the Docstrings present within the source.
 
 .. note::
 

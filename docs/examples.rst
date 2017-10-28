@@ -1,2 +1,6 @@
+.. currentmodule:: hypixel
+
+.. examples:
+
 Examples
 ========

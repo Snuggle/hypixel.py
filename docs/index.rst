@@ -1,5 +1,9 @@
-Welcome to Hypixel.py's documentation!
-======================================
+Welcome to hypixel.py's documentation!
+===========================================
+
+This is a simple, unofficial Python library which allows you to get values from the Hypixel-API.
+
+It is open-sourced and hosted on `GitHub <https://github.com/Snuggle/hypixel.py>`_.
 
 Contents:
 
@@ -11,11 +15,3 @@ Contents:
    whats_new
    examples
    faq
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
