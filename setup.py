@@ -13,6 +13,15 @@ with open('hypixel.py') as f:
         if line.strip().startswith('__version__'):
             version = line.split('=')[1].strip().replace('"', '').replace("'", '')
 
+on_rtd = os.getenv('READTHEDOCS') == 'True'
+
+requirements = []
+with open('requirements.txt') as f:
+  requirements = f.read().splitlines()
+
+if on_rtd:
+  requirements.append('sphinxcontrib-napoleon')
+
 here = os.path.abspath(os.path.dirname(__file__))
 
 class UploadCommand(Command):
@@ -63,7 +72,7 @@ setup(name='hypixel',
       url='https://github.com/SnuggIes/hypixel.py',
       author='Snuggle',
       author_email='snuggle@sprinkly.net',
-      install_requires=['grequests'],
+      install_requires=requirements,
       py_modules = ['hypixel', 'leveling'],
       python_requires='>=3.3',
       classifiers=[
