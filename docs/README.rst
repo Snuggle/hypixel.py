@@ -18,9 +18,13 @@ Hypixel: Python wrapper for the Hypixel-API.
     :target: https://pypi.org/project/hypixel/
     :alt: PiPy Version
         
-.. image:: https://img.shields.io/travis/SnuggIes/hypixel.py.svg?colorA=2d2306&colorB=705810
+.. image:: https://img.shields.io/travis/Snuggle/hypixel.py.svg?colorA=2d2306&colorB=705810
     :target: https://travis-ci.org/SnuggIes/hypixel.py
     :alt: Travis Ci Build
+
+.. image:: https://img.shields.io/readthedocs/hypixel.svg?colorA=2d2306&colorB=705810
+    :target: https://hypixel.readthedocs.io/en/latest/
+    :alt: Read the Docs
 
 .. image:: https://img.shields.io/pypi/pyversions/hypixel.svg?colorA=2d2306&colorB=705810
     :target: https://pypi.org/project/hypixel/

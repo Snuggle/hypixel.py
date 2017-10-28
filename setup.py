@@ -5,7 +5,7 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-with open('README.rst') as f:
+with open('./docs/README.rst') as f:
     readme_content = f.read().strip()
 
 with open('hypixel.py') as f:
