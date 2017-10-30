@@ -4,8 +4,12 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7-dev"
+  - "nightly"
 # command to install dependencies
 install:
   - pip install -r requirements.txt
 # command to run tests
-script: python tests.py
+script: 
+- python ./tests/player.py
+- python ./tests/speed.py

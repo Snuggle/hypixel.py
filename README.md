@@ -16,10 +16,6 @@
         <img src="https://img.shields.io/travis/Snuggle/hypixel.py.svg?colorA=2d2306&colorB=705810"
              alt="Travis Ci Build">
     </a>
-    <a href="https://hypixel.readthedocs.io/en/latest/" style="text-decoration: none">
-        <img src="https://img.shields.io/readthedocs/hypixel.svg?colorA=2d2306&colorB=705810"
-             alt="Read the Docs">
-    </a>
     <a href="https://python.org/downloads/" style="text-decoration: none">
         <img src="https://img.shields.io/pypi/pyversions/hypixel.svg?colorA=2d2306&colorB=705810"
              alt="Supported Python Versions">
