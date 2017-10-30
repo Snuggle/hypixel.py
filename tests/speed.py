@@ -15,7 +15,7 @@ Repeats = 5
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import hypixel
 from time import time
 from random import shuffle
