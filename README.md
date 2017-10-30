@@ -34,7 +34,7 @@ Designed for use with Python 3.6. Should work with Python 3.3 or higher.
 The easiest way to install this package is using `pip install hypixel`. Once hypixel.py has been installed by pip, please put `import hypixel` at the top of your code.
 
 ## Recent Changes
-For the most recent changes and updates to this library, please see this [changelog](./docs/changelog.md).
+For the most recent changes and updates to this library, please see this [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
 
 ## What can you do?
 To view documentation on what you can actual do with this library, please take a look at [http://hypixel.readthedocs.io/](http://hypixel.readthedocs.io/en/latest/). This page will contain all of the documentation necessary to start creating!
