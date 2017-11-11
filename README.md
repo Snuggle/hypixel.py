@@ -26,21 +26,23 @@
     </a>
 </p>
 
-This is a simple, unofficial Python library which allows you to get values from the Hypixel-API using a JSON request.
-Designed for use with Python 3.6. Should work with Python 3.3 or higher.
+Hypixel.PY: a simple, community Python library which allows you to get values from the [Hypixel Api](https://api.hypixel.net) using JSON requests.
+Designed for use with Python 3.6, however it work with versions higher than Python 3.2.
 
 ## How to install
-
-The easiest way to install this package is using `pip install hypixel`. Once hypixel.py has been installed by pip, please put `import hypixel` at the top of your code.
+Installing Hypixel.PY is easy-peasy! Get going with: `pip install hypixel`, followed by placing `import hypixel` at the top of your code.
 
 ## Recent Changes
-For the most recent changes and updates to this library, please see this [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
+For the latest goss and updates to this library, check out our [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
 
 ## What can you do?
-To view documentation on what you can actual do with this library, please take a look at [http://hypixel.readthedocs.io/](http://hypixel.readthedocs.io/en/latest/). This page will contain all of the documentation necessary to start creating!
+If you learn-by-reading, take a look at [http://hypixel.readthedocs.io/](http://hypixel.readthedocs.io/en/latest/) to see what this library is capable of. Get creating straight away!
 
 ## Are there any examples?
-Yup! There are currently two different examples that you can view. There's one which is designed to seem pretty simple, and there's a more advanced example, which accept's user input 'n' stuff. To view these, please look in the [Examples](./Examples/) folder.
+Yup! There are currently two different examples that you can view: one's pretty simple, and the others a bit more advanced. Check them out at: [Examples](./Examples/).
 
 ## Can I contribute to this?
-Gosh, it would be super awesome if you would like to contribute to this project! To view the guidelines on contributing code to this project, please have a look at [this guide](./docs/contributing.md).
+Heckas! You would be super awesome if you did that! Get started by checking out the guidelines on contributing here, have a look at [the contributing guidelines](./docs/contributing.md)!
+
+## Got any issues?
+Check out the current [Issues](https://github.com/Snuggle/hypixel.py/issues/) for anyone else with your issue, or post a [new Issue](https://github.com/Snuggle/hypixel.py/issues/new/) for help! 
