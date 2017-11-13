@@ -1,5 +1,5 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.6.8'
+__version__ = '0.6.9'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking.
@@ -269,16 +269,22 @@ class Guild:
         allGuildMembers = {}
         for role in guildRoles: # Make allGuildMembers =
             allGuildMembers[role] = [] # {MEMBER: [], OFFICER: [], GUILDMASTER: []}
-
-        for member in memberDict: # For each member, use Mojang's API to get their username.
-            urls = [UUIDResolverAPI + member['uuid']]
-            requests = (grequests.get(u) for u in urls)
-            responses = grequests.imap(requests)
-            for r in responses:
-                response = r.json()
-            for role in guildRoles: # Then sort them into the correct place in allGuildMembers.
-                if member['rank'] == role:
-                    allGuildMembers[role].append(response['name'])
+        urls = []
+        roleOrder = []
+        memberList = []
+        for member in memberDict: # For each member, use the API to get their username.
+            roleOrder.append(member['rank'])
+            urls.append(UUIDResolverAPI + member['uuid'])
+        requests = (grequests.get(u) for u in urls)
+        responses = grequests.map(requests)
+        i = 0
+        for name in responses:
+            member = {'role': roleOrder[i], 'name': name.json()['name']}
+            memberList.append(member)
+            i = i + 1
+        for member in memberList:
+            roleList = allGuildMembers[member['role']]
+            roleList.append(member['name'])
 
         return allGuildMembers
 
