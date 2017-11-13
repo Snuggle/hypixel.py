@@ -2,17 +2,17 @@
 __version__ = '0.6.7'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
-# TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
+# TODO: Add API-usage stat-tracking.
+# Like a counter of the number of requests and how many per minute etc.
 
-import json
 from random import choice
-import grequests
 from time import time
+import grequests
 
 import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
-MOJANG_SESSION_SERVER_URL = "https://sessionserver.mojang.com/session/minecraft/profile/"
+UUIDResolverAPI = "https://use.gameapis.net/mc/player/profile/"
 
 HYPIXEL_API_KEY_LENGTH = 36 # This is the length of a Hypixel-API key. Don't change from 36.
 verified_api_keys = []
@@ -26,54 +26,57 @@ class PlayerNotFoundException(Exception):
     pass
 
 class HypixelAPIError(Exception):
-    """ Simple exception if something's gone very wrong and the program shouldn't be able to continue. Usually incorrect API keys. """
+    """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
 
 def getJSON(typeOfRequest, **kwargs):
-        """ This private function is used for getting JSON from Hypixel's Public API. """
-        requestEnd = ''
-        if typeOfRequest == 'key':
-            api_key = kwargs['key']
-        else:
-            api_key = choice(verified_api_keys) # Select a random API key from the list available.
+    """ This private function is used for getting JSON from Hypixel's Public API. """
+    requestEnd = ''
+    if typeOfRequest == 'key':
+        api_key = kwargs['key']
+    else:
+        api_key = choice(verified_api_keys) # Select a random API key from the list available.
 
-            if typeOfRequest == 'player':
-                UUIDType = 'uuid'
-                uuid = kwargs['uuid']
-                if len(uuid) <= 16:
-                    UUIDType = 'name' # I could probably clean this up somehow.
+        if typeOfRequest == 'player':
+            UUIDType = 'uuid'
+            uuid = kwargs['uuid']
+            if len(uuid) <= 16:
+                UUIDType = 'name' # TODO: I could probably clean this up somehow.
 
-            for name, value in kwargs.items():
-                if typeOfRequest == "player" and name == "uuid":
-                    name = UUIDType
-                requestEnd += '&{}={}'.format(name,value)
-        
-        cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd)
-        urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
-        if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time(): # If url exists in request cache, and time hasn't expired...
-            response = requestCache[cacheURL]['data']
-        else:
-            requests = (grequests.get(u) for u in urls)
-            responses = grequests.imap(requests)
-            for r in responses:
-                response = r.json()
+        for name, value in kwargs.items():
+            if typeOfRequest == "player" and name == "uuid":
+                name = UUIDType
+            requestEnd += '&{}={}'.format(name, value)
 
-            if response['success'] is False:
-                    raise HypixelAPIError(response)
-            if typeOfRequest == 'player':        
-                if response['player'] is None:
-                    raise PlayerNotFoundException(uuid)
-            if typeOfRequest != 'key': # Don't cache key requests.
-                requestCache[cacheURL] = {}
-                requestCache[cacheURL]['data'] = response
-                requestCache[cacheURL]['cacheTime'] = time() + cacheTime # Cache request and clean current cache.
-                cleanCache()
-        try:
-            return response[typeOfRequest]
-        except KeyError:
-            return response
+    cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd) # TODO: Lowercase
+    urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+
+    # If url exists in request cache, and time hasn't expired...
+    if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
+        response = requestCache[cacheURL]['data'] # TODO: Extend cache time
+    else:
+        requests = (grequests.get(u) for u in urls)
+        responses = grequests.imap(requests)
+        for r in responses:
+            response = r.json()
+
+        if response['success'] is False:
+            raise HypixelAPIError(response)
+        if typeOfRequest == 'player':
+            if response['player'] is None:
+                raise PlayerNotFoundException(uuid)
+        if typeOfRequest != 'key': # Don't cache key requests.
+            requestCache[cacheURL] = {}
+            requestCache[cacheURL]['data'] = response
+            requestCache[cacheURL]['cacheTime'] = time() + cacheTime # Cache request and clean current cache.
+            cleanCache()
+    try:
+        return response[typeOfRequest]
+    except KeyError:
+        return response
 
 def cleanCache():
+    """ This function is occasionally called to clean the cache of any expired objects. """
     itemsToRemove = []
     for item in requestCache:
         if requestCache[item]['cacheTime'] < time():
@@ -125,10 +128,10 @@ def setKeys(api_keys):
 
 class Player:
     """ This class represents a player on Hypixel as a single object.
-        A player has a UUID, a username, statistics etc. 
+        A player has a UUID, a username, statistics etc.
 
         Raises
-        ------ 
+        ------
         PlayerNotFoundException
             If the player cannot be found, this will be raised.
 
@@ -136,7 +139,7 @@ class Player:
         -----------
         Username/UUID : string
             Either the UUID or the username (Depreciated) for a Minecraft player.
-        
+
         Attributes
         -----------
         JSON : string
@@ -166,7 +169,8 @@ class Player:
         playerInfo['displayName'] = Player.getName(self)
         playerInfo['rank'] = Player.getRank(self)
         playerInfo['networkLevel'] = Player.getLevel(self)
-        JSONKeys = ['karma', 'firstLogin', 'lastLogin', 'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
+        JSONKeys = ['karma', 'firstLogin', 'lastLogin',
+                    'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
         for item in JSONKeys:
             try:
                 playerInfo[item] = JSON[item]
@@ -218,14 +222,12 @@ class Player:
     def getGuildID(self):
         """ This function is used to get a GuildID from a player. """
         UUID = self.UUID
-        api_key = choice(verified_api_keys) # Select a random API key from those available.
         GuildID = getJSON('findGuild', byUuid=UUID)
         return GuildID['guild']
 
     def getSession(self):
         """ This function is used to get a player's session information. """
         UUID = self.UUID
-        api_key = choice(verified_api_keys) # Select a random API key from those available.
         try:
             session = getJSON('session', uuid=UUID)
         except HypixelAPIError:
@@ -234,14 +236,14 @@ class Player:
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
-        A guild has a name, members etc. 
-        
+        A guild has a name, members etc.
+
         Parameters
         -----------
         GuildID : string
             The ID for a Guild. This can be found by using :class:`Player.getGuildID()`.
-            
-            
+
+
         Attributes
         -----------
         JSON : string
@@ -249,7 +251,7 @@ class Guild:
 
         GuildID : string
             The Guild's GuildID.
-            
+
     """
     JSON = None
     GuildID = None
@@ -269,7 +271,7 @@ class Guild:
             allGuildMembers[role] = [] # {MEMBER: [], OFFICER: [], GUILDMASTER: []}
 
         for member in memberDict: # For each member, use Mojang's API to get their username.
-            urls = [MOJANG_SESSION_SERVER_URL + member['uuid']]
+            urls = [UUIDResolverAPI + member['uuid']]
             requests = (grequests.get(u) for u in urls)
             responses = grequests.imap(requests)
             for r in responses:
@@ -282,4 +284,4 @@ class Guild:
 
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
-          "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
+          "Please look at https://github.com/Snuggle/hypixel.py for usage & install information.")
