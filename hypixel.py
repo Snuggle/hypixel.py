@@ -280,7 +280,7 @@ class Guild:
         i = 0
         for name in responses:
             try:
-            member = {'role': roleOrder[i], 'name': name.json()['name']}
+                member = {'role': roleOrder[i], 'name': name.json()['name']}
             except:
                 member = {'role': roleOrder[i], 'name': 'Unknown'}
             memberList.append(member)
