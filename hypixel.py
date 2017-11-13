@@ -1,5 +1,5 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.6.9'
+__version__ = '0.7.0'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking.
@@ -279,7 +279,10 @@ class Guild:
         responses = grequests.map(requests)
         i = 0
         for name in responses:
+            try:
             member = {'role': roleOrder[i], 'name': name.json()['name']}
+            except:
+                member = {'role': roleOrder[i], 'name': 'Unknown'}
             memberList.append(member)
             i = i + 1
         for member in memberList:
