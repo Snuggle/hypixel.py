@@ -1,5 +1,5 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.7.1'
+__version__ = '0.7.2'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking.
@@ -25,9 +25,9 @@ class PlayerNotFoundException(Exception):
         You can catch this exception with ``except hypixel.PlayerNotFoundException:`` """
     pass
 
-class GuildNotFoundException(Exception):
+class GuildIDNotValid(Exception):
     """ Simple exception if a Guild is not found using a GuildID. This exception can usually be ignored.
-        You can catch this exception with ``except hypixel.GuildNotFoundException:`` """
+        You can catch this exception with ``except hypixel.GuildIDNotValid:`` """
     pass
 
 class HypixelAPIError(Exception):
@@ -265,8 +265,8 @@ class Guild:
             if len(GuildID) == 24:
                 self.GuildID = GuildID
                 self.JSON = getJSON('guild', id=GuildID)
-        except:
-            raise GuildNotFoundException(GuildID)
+        except Exception as chainedException:
+            raise GuildIDNotValid(GuildID) from chainedException
 
     def getMembers(self):
         """ This function enumerates all the members in a guild.
@@ -289,7 +289,7 @@ class Guild:
         for name in responses:
             try:
                 member = {'role': roleOrder[i], 'name': name.json()['name']}
-            except:
+            except KeyError:
                 member = {'role': roleOrder[i], 'name': 'Unknown'}
             memberList.append(member)
             i = i + 1
