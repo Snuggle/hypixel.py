@@ -25,6 +25,11 @@ class PlayerNotFoundException(Exception):
         You can catch this exception with ``except hypixel.PlayerNotFoundException:`` """
     pass
 
+class GuildNotFoundException(Exception):
+    """ Simple exception if a Guild is not found using a GuildID. This exception can usually be ignored.
+        You can catch this exception with ``except hypixel.GuildNotFoundException:`` """
+    pass
+
 class HypixelAPIError(Exception):
     """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
@@ -256,9 +261,12 @@ class Guild:
     JSON = None
     GuildID = None
     def __init__(self, GuildID):
-        if len(GuildID) == 24:
-            self.GuildID = GuildID
-            self.JSON = getJSON('guild', id=GuildID)
+        try:
+            if len(GuildID) == 24:
+                self.GuildID = GuildID
+                self.JSON = getJSON('guild', id=GuildID)
+        except:
+            raise GuildNotFoundException(GuildID)
 
     def getMembers(self):
         """ This function enumerates all the members in a guild.
