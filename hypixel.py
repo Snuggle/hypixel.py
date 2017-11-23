@@ -1,5 +1,5 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.7.2'
+__version__ = '0.7.3'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking.
@@ -12,7 +12,7 @@ import grequests
 import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
-UUIDResolverAPI = "https://use.gameapis.net/mc/player/profile/"
+UUIDResolverAPI = "https://sessionserver.mojang.com/session/minecraft/profile/"
 
 HYPIXEL_API_KEY_LENGTH = 36 # This is the length of a Hypixel-API key. Don't change from 36.
 verified_api_keys = []
@@ -54,13 +54,13 @@ def getJSON(typeOfRequest, **kwargs):
             requestEnd += '&{}={}'.format(name, value)
 
     cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd) # TODO: Lowercase
-    urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+    allURLS = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
 
     # If url exists in request cache, and time hasn't expired...
     if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
         response = requestCache[cacheURL]['data'] # TODO: Extend cache time
     else:
-        requests = (grequests.get(u) for u in urls)
+        requests = (grequests.get(u) for u in allURLS)
         responses = grequests.imap(requests)
         for r in responses:
             response = r.json()
@@ -84,15 +84,18 @@ def cleanCache():
     """ This function is occasionally called to clean the cache of any expired objects. """
     itemsToRemove = []
     for item in requestCache:
-        if requestCache[item]['cacheTime'] < time():
-            itemsToRemove.append(item)
+        try:
+            if requestCache[item]['cacheTime'] < time():
+                itemsToRemove.append(item)
+        except:
+            pass
     for item in itemsToRemove:
         requestCache.pop(item)
-            
+
 
 def setCacheTime(seconds):
-    """ This function sets how long the request cache should last, in seconds. 
-    
+    """ This function sets how long the request cache should last, in seconds.
+
         Parameters
         -----------
         seconds : float
@@ -110,16 +113,16 @@ def setKeys(api_keys):
         It also checks that they are valid/working.
 
         Raises
-        ------ 
+        ------
         HypixelAPIError
             If any of the keys are invalid or don't work, this will be raised.
 
         Parameters
         -----------
         api_keys : list
-            A list of the API keys that you would like to use. 
-            
-            Example: ``['740b8cf8-8aba-f2ed-f7b10119d28']``. 
+            A list of the API keys that you would like to use.
+
+            Example: ``['740b8cf8-8aba-f2ed-f7b10119d28']``.
     """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
@@ -269,26 +272,45 @@ class Guild:
             raise GuildIDNotValid(GuildID) from chainedException
 
     def getMembers(self):
-        """ This function enumerates all the members in a guild.
-            Mojang's API rate-limits this weirdly. You can use this as many times as you want,
-            but it has to be a unique request. Duplicate requests of the same player are 1 min. """
+    """ This function enumerates all the members in a guild.
+        Mojang's API rate-limits this weirdly.
+        This is an extremely messy helper function. Use at your own risk. """
         guildRoles = ['MEMBER', 'OFFICER', 'GUILDMASTER'] # Define variables etc.
         memberDict = self.JSON['members']
         allGuildMembers = {}
         for role in guildRoles: # Make allGuildMembers =
             allGuildMembers[role] = [] # {MEMBER: [], OFFICER: [], GUILDMASTER: []}
-        urls = []
+        allURLS = []
+        URLStoRequest = []
         roleOrder = []
         memberList = []
+        requests = None
+        responses = None
         for member in memberDict: # For each member, use the API to get their username.
             roleOrder.append(member['rank'])
-            urls.append(UUIDResolverAPI + member['uuid'])
-        requests = (grequests.get(u) for u in urls)
+            if UUIDResolverAPI + member['uuid'] in requestCache:
+                print("cached")
+                allURLS.append(requestCache[UUIDResolverAPI + member['uuid']]['name'])
+            else:
+                print("NOPE")
+                allURLS.append(UUIDResolverAPI + member['uuid'])
+                URLStoRequest.append(UUIDResolverAPI + member['uuid'])
+        requests = (grequests.get(u) for u in URLStoRequest)
         responses = grequests.map(requests)
+        for response in responses:
+            requestCache[UUIDResolverAPI + response.json()['id']] = response.json()
         i = 0
-        for name in responses:
+        for uindex, user in enumerate(allURLS):
             try:
-                member = {'role': roleOrder[i], 'name': name.json()['name']}
+                if user.startswith(UUIDResolverAPI):
+                    allURLS[uindex] = responses[i].json()['name']
+                    i = i + 1
+            except AttributeError:
+                pass
+        i = 0
+        for name in allURLS:
+            try:
+                member = {'role': roleOrder[i], 'name': name}
             except KeyError:
                 member = {'role': roleOrder[i], 'name': 'Unknown'}
             memberList.append(member)
