@@ -1,18 +1,17 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.6.7'
+__version__ = '0.7.3'
 # pylint: disable=C0103
 # TODO: Add more comments. Explain what's happening!
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
 
-import json
 from random import choice
-import grequests
 from time import time
+import grequests
 
 import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
-MOJANG_SESSION_SERVER_URL = "https://sessionserver.mojang.com/session/minecraft/profile/"
+UUIDResolverAPI = "https://sessionserver.mojang.com/session/minecraft/profile/"
 
 HYPIXEL_API_KEY_LENGTH = 36 # This is the length of a Hypixel-API key. Don't change from 36.
 verified_api_keys = []
@@ -25,66 +24,77 @@ class PlayerNotFoundException(Exception):
         You can catch this exception with ``except hypixel.PlayerNotFoundException:`` """
     pass
 
+class GuildIDNotValid(Exception):
+    """ Simple exception if a Guild is not found using a GuildID. This exception can usually be ignored.
+        You can catch this exception with ``except hypixel.GuildIDNotValid:`` """
+    pass
+
 class HypixelAPIError(Exception):
-    """ Simple exception if something's gone very wrong and the program shouldn't be able to continue. Usually incorrect API keys. """
+    """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
 
 def getJSON(typeOfRequest, **kwargs):
-        """ This private function is used for getting JSON from Hypixel's Public API. """
-        requestEnd = ''
-        if typeOfRequest == 'key':
-            api_key = kwargs['key']
-        else:
-            api_key = choice(verified_api_keys) # Select a random API key from the list available.
+    """ This private function is used for getting JSON from Hypixel's Public API. """
+    requestEnd = ''
+    if typeOfRequest == 'key':
+        api_key = kwargs['key']
+    else:
+        api_key = choice(verified_api_keys) # Select a random API key from the list available.
 
-            if typeOfRequest == 'player':
-                UUIDType = 'uuid'
-                uuid = kwargs['uuid']
-                if len(uuid) <= 16:
-                    UUIDType = 'name' # I could probably clean this up somehow.
+        if typeOfRequest == 'player':
+            UUIDType = 'uuid'
+            uuid = kwargs['uuid']
+            if len(uuid) <= 16:
+                UUIDType = 'name' # TODO: I could probably clean this up somehow.
 
-            for name, value in kwargs.items():
-                if typeOfRequest == "player" and name == "uuid":
-                    name = UUIDType
-                requestEnd += '&{}={}'.format(name,value)
-        
-        cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd)
-        urls = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
-        if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time(): # If url exists in request cache, and time hasn't expired...
-            response = requestCache[cacheURL]['data']
-        else:
-            requests = (grequests.get(u) for u in urls)
-            responses = grequests.imap(requests)
-            for r in responses:
-                response = r.json()
+        for name, value in kwargs.items():
+            if typeOfRequest == "player" and name == "uuid":
+                name = UUIDType
+            requestEnd += '&{}={}'.format(name, value)
 
-            if response['success'] is False:
-                    raise HypixelAPIError(response)
-            if typeOfRequest == 'player':        
-                if response['player'] is None:
-                    raise PlayerNotFoundException(uuid)
-            if typeOfRequest != 'key': # Don't cache key requests.
-                requestCache[cacheURL] = {}
-                requestCache[cacheURL]['data'] = response
-                requestCache[cacheURL]['cacheTime'] = time() + cacheTime # Cache request and clean current cache.
-                cleanCache()
-        try:
-            return response[typeOfRequest]
-        except KeyError:
-            return response
+    cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd) # TODO: Lowercase
+    allURLS = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+
+    # If url exists in request cache, and time hasn't expired...
+    if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
+        response = requestCache[cacheURL]['data'] # TODO: Extend cache time
+    else:
+        requests = (grequests.get(u) for u in allURLS)
+        responses = grequests.imap(requests)
+        for r in responses:
+            response = r.json()
+
+        if response['success'] is False:
+            raise HypixelAPIError(response)
+        if typeOfRequest == 'player':
+            if response['player'] is None:
+                raise PlayerNotFoundException(uuid)
+        if typeOfRequest != 'key': # Don't cache key requests.
+            requestCache[cacheURL] = {}
+            requestCache[cacheURL]['data'] = response
+            requestCache[cacheURL]['cacheTime'] = time() + cacheTime # Cache request and clean current cache.
+            cleanCache()
+    try:
+        return response[typeOfRequest]
+    except KeyError:
+        return response
 
 def cleanCache():
+    """ This function is occasionally called to clean the cache of any expired objects. """
     itemsToRemove = []
     for item in requestCache:
-        if requestCache[item]['cacheTime'] < time():
-            itemsToRemove.append(item)
+        try:
+            if requestCache[item]['cacheTime'] < time():
+                itemsToRemove.append(item)
+        except:
+            pass
     for item in itemsToRemove:
         requestCache.pop(item)
-            
+
 
 def setCacheTime(seconds):
-    """ This function sets how long the request cache should last, in seconds. 
-    
+    """ This function sets how long the request cache should last, in seconds.
+
         Parameters
         -----------
         seconds : float
@@ -102,16 +112,16 @@ def setKeys(api_keys):
         It also checks that they are valid/working.
 
         Raises
-        ------ 
+        ------
         HypixelAPIError
             If any of the keys are invalid or don't work, this will be raised.
 
         Parameters
         -----------
         api_keys : list
-            A list of the API keys that you would like to use. 
-            
-            Example: ``['740b8cf8-8aba-f2ed-f7b10119d28']``. 
+            A list of the API keys that you would like to use.
+
+            Example: ``['740b8cf8-8aba-f2ed-f7b10119d28']``.
     """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
@@ -125,10 +135,10 @@ def setKeys(api_keys):
 
 class Player:
     """ This class represents a player on Hypixel as a single object.
-        A player has a UUID, a username, statistics etc. 
+        A player has a UUID, a username, statistics etc.
 
         Raises
-        ------ 
+        ------
         PlayerNotFoundException
             If the player cannot be found, this will be raised.
 
@@ -136,7 +146,7 @@ class Player:
         -----------
         Username/UUID : string
             Either the UUID or the username (Depreciated) for a Minecraft player.
-        
+
         Attributes
         -----------
         JSON : string
@@ -166,7 +176,8 @@ class Player:
         playerInfo['displayName'] = Player.getName(self)
         playerInfo['rank'] = Player.getRank(self)
         playerInfo['networkLevel'] = Player.getLevel(self)
-        JSONKeys = ['karma', 'firstLogin', 'lastLogin', 'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
+        JSONKeys = ['karma', 'firstLogin', 'lastLogin',
+                    'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
         for item in JSONKeys:
             try:
                 playerInfo[item] = JSON[item]
@@ -218,14 +229,12 @@ class Player:
     def getGuildID(self):
         """ This function is used to get a GuildID from a player. """
         UUID = self.UUID
-        api_key = choice(verified_api_keys) # Select a random API key from those available.
         GuildID = getJSON('findGuild', byUuid=UUID)
         return GuildID['guild']
 
     def getSession(self):
         """ This function is used to get a player's session information. """
         UUID = self.UUID
-        api_key = choice(verified_api_keys) # Select a random API key from those available.
         try:
             session = getJSON('session', uuid=UUID)
         except HypixelAPIError:
@@ -234,14 +243,14 @@ class Player:
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
-        A guild has a name, members etc. 
-        
+        A guild has a name, members etc.
+
         Parameters
         -----------
         GuildID : string
             The ID for a Guild. This can be found by using :class:`Player.getGuildID()`.
-            
-            
+
+
         Attributes
         -----------
         JSON : string
@@ -249,34 +258,65 @@ class Guild:
 
         GuildID : string
             The Guild's GuildID.
-            
+
     """
     JSON = None
     GuildID = None
     def __init__(self, GuildID):
-        if len(GuildID) == 24:
-            self.GuildID = GuildID
-            self.JSON = getJSON('guild', id=GuildID)
+        try:
+            if len(GuildID) == 24:
+                self.GuildID = GuildID
+                self.JSON = getJSON('guild', id=GuildID)
+        except Exception as chainedException:
+            raise GuildIDNotValid(GuildID) from chainedException
 
     def getMembers(self):
         """ This function enumerates all the members in a guild.
-            Mojang's API rate-limits this weirdly. You can use this as many times as you want,
-            but it has to be a unique request. Duplicate requests of the same player are 1 min. """
+        Mojang's API rate-limits this weirdly.
+        This is an extremely messy helper function. Use at your own risk. """
         guildRoles = ['MEMBER', 'OFFICER', 'GUILDMASTER'] # Define variables etc.
         memberDict = self.JSON['members']
         allGuildMembers = {}
         for role in guildRoles: # Make allGuildMembers =
             allGuildMembers[role] = [] # {MEMBER: [], OFFICER: [], GUILDMASTER: []}
-
-        for member in memberDict: # For each member, use Mojang's API to get their username.
-            urls = [MOJANG_SESSION_SERVER_URL + member['uuid']]
-            requests = (grequests.get(u) for u in urls)
-            responses = grequests.imap(requests)
-            for r in responses:
-                response = r.json()
-            for role in guildRoles: # Then sort them into the correct place in allGuildMembers.
-                if member['rank'] == role:
-                    allGuildMembers[role].append(response['name'])
+        allURLS = []
+        URLStoRequest = []
+        roleOrder = []
+        memberList = []
+        requests = None
+        responses = None
+        for member in memberDict: # For each member, use the API to get their username.
+            roleOrder.append(member['rank'])
+            if UUIDResolverAPI + member['uuid'] in requestCache:
+                print("cached")
+                allURLS.append(requestCache[UUIDResolverAPI + member['uuid']]['name'])
+            else:
+                print("NOPE")
+                allURLS.append(UUIDResolverAPI + member['uuid'])
+                URLStoRequest.append(UUIDResolverAPI + member['uuid'])
+        requests = (grequests.get(u) for u in URLStoRequest)
+        responses = grequests.map(requests)
+        for response in responses:
+            requestCache[UUIDResolverAPI + response.json()['id']] = response.json()
+        i = 0
+        for uindex, user in enumerate(allURLS):
+            try:
+                if user.startswith(UUIDResolverAPI):
+                    allURLS[uindex] = responses[i].json()['name']
+                    i = i + 1
+            except AttributeError:
+                pass
+        i = 0
+        for name in allURLS:
+            try:
+                member = {'role': roleOrder[i], 'name': name}
+            except KeyError:
+                member = {'role': roleOrder[i], 'name': 'Unknown'}
+            memberList.append(member)
+            i = i + 1
+        for member in memberList:
+            roleList = allGuildMembers[member['role']]
+            roleList.append(member['name'])
 
         return allGuildMembers
 
