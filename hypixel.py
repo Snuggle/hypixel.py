@@ -272,7 +272,7 @@ class Guild:
             raise GuildIDNotValid(GuildID) from chainedException
 
     def getMembers(self):
-    """ This function enumerates all the members in a guild.
+        """ This function enumerates all the members in a guild.
         Mojang's API rate-limits this weirdly.
         This is an extremely messy helper function. Use at your own risk. """
         guildRoles = ['MEMBER', 'OFFICER', 'GUILDMASTER'] # Define variables etc.
