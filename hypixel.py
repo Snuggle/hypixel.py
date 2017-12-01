@@ -1,9 +1,8 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
 __version__ = '0.7.3'
 # pylint: disable=C0103
-# TODO: Add more comments, saying what is happening. :p
-# TODO: Add API-usage stat-tracking.
-# Like a counter of the number of requests and how many per minute etc.
+# TODO: Add more comments. Explain what's happening!
+# TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
 
 from random import choice
 from time import time
@@ -323,4 +322,4 @@ class Guild:
 
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
-          "Please look at https://github.com/Snuggle/hypixel.py for usage & install information.")
+          "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
