@@ -26,14 +26,14 @@
     </a>
 </p>
 
-Hypixel.PY: a simple, community Python library which allows you to get values from the [Hypixel Api](https://api.hypixel.net) using JSON requests.
+hypixel.py: A simple, community Python library which allows you to get values from the [Hypixel API](https://api.hypixel.net) using JSON requests.
 Designed for use with Python 3.6, however it work with versions higher than Python 3.2.
 
 ## How to install
-Installing Hypixel.PY is easy-peasy! Get going with: `pip install hypixel`, followed by placing `import hypixel` at the top of your code.
+Installing hypixel.py is easy-peasy! Get going with: `pip install hypixel`, followed by placing `import hypixel` at the top of your code.
 
 ## Recent Changes
-For the latest goss and updates to this library, check out our [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
+For the latest news and updates to this library, check out our [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
 
 ## What can you do?
 If you learn-by-reading, take a look at [http://hypixel.readthedocs.io/](http://hypixel.readthedocs.io/en/latest/) to see what this library is capable of. Get creating straight away!
