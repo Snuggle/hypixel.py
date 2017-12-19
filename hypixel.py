@@ -212,7 +212,7 @@ class Player:
         playerRank['wasStaff'] = False
         possibleRankLocations = ['packageRank', 'newPackageRank', 'monthlyPackageRank', 'rank']
         # May need to add support for multiple monthlyPackageRank's in future.
-        
+
         for Location in possibleRankLocations:
             if Location in JSON:
                 if Location == 'rank' and JSON[Location] == 'NORMAL':
@@ -220,7 +220,7 @@ class Player:
                 else:
                     dirtyRank = JSON[Location].title()
                     dirtyRank = dirtyRank.replace("_", " ").replace("Mvp", "MVP").replace("Vip", "VIP").replace("Superstar", "MVP++") # pylint: disable=line-too-long
-                    playerRank['rank'] = dirtyRank.replace(" Plus", "+")
+                    playerRank['rank'] = dirtyRank.replace(" Plus", "+").replace("Youtuber", "YouTube")
 
         if 'rank' not in playerRank:
             playerRank['rank'] = 'Non'
