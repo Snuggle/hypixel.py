@@ -1,5 +1,5 @@
 """ Simple Hypixel-API in Python, by Snuggle | 2017-09-30 to 2017-10-28 """
-__version__ = '0.7.3'
+__version__ = '0.7.4'
 # pylint: disable=C0103
 # TODO: Add more comments, saying what is happening. :p
 # TODO: Add API-usage stat-tracking.
@@ -211,7 +211,7 @@ class Player:
         JSON = self.JSON
         playerRank = {} # Creating dictionary.
         playerRank['wasStaff'] = False
-        possibleRankLocations = ['packageRank', 'newPackageRank', 'rank']
+        possibleRankLocations = ['packageRank', 'newPackageRank', 'monthlyPackageRank', 'rank']
 
         for Location in possibleRankLocations:
             if Location in JSON:
@@ -219,7 +219,7 @@ class Player:
                     playerRank['wasStaff'] = True
                 else:
                     dirtyRank = JSON[Location].title()
-                    dirtyRank = dirtyRank.replace("_", " ").replace("Mvp", "MVP").replace("Vip", "VIP") # pylint: disable=line-too-long
+                    dirtyRank = dirtyRank.replace("_", " ").replace("Mvp", "MVP").replace("Vip", "VIP").replace("Superstar", "MVP++") # pylint: disable=line-too-long
                     playerRank['rank'] = dirtyRank.replace(" Plus", "+")
 
         if 'rank' not in playerRank:
