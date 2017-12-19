@@ -211,7 +211,8 @@ class Player:
         playerRank = {} # Creating dictionary.
         playerRank['wasStaff'] = False
         possibleRankLocations = ['packageRank', 'newPackageRank', 'monthlyPackageRank', 'rank']
-
+        # May need to add support for multiple monthlyPackageRank's in future.
+        
         for Location in possibleRankLocations:
             if Location in JSON:
                 if Location == 'rank' and JSON[Location] == 'NORMAL':
