@@ -41,6 +41,8 @@ If you learn-by-reading, take a look at [http://hypixel.readthedocs.io/](http://
 ## Are there any examples?
 Yup! There are currently two different examples that you can view: one's pretty simple, and the others a bit more advanced. Check them out at: [Examples](./.examples/).
 
+You could also look at my Hypixel bot for Discord, which uses this library and provides players an awesome way to look at people's statistics! https://sprinkly.net/hypixelbot
+
 ## Can I contribute to this?
 Heckas! You would be super awesome if you did that! Get started by checking out the guidelines on contributing here, have a look at [the contributing guidelines](./docs/contributing.md)!
 
