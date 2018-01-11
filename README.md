@@ -39,7 +39,7 @@ For the latest news and updates to this library, check out our [changelog](http:
 If you learn-by-reading, take a look at [http://hypixel.readthedocs.io/](http://hypixel.readthedocs.io/en/latest/) to see what this library is capable of. Get creating straight away!
 
 ## Are there any examples?
-Yup! There are currently two different examples that you can view: one's pretty simple, and the others a bit more advanced. Check them out at: [Examples](./Examples/).
+Yup! There are currently two different examples that you can view: one's pretty simple, and the others a bit more advanced. Check them out at: [Examples](./.examples/).
 
 ## Can I contribute to this?
 Heckas! You would be super awesome if you did that! Get started by checking out the guidelines on contributing here, have a look at [the contributing guidelines](./docs/contributing.md)!
