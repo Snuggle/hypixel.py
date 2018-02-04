@@ -218,6 +218,8 @@ class Player:
                 if Location == 'rank' and JSON[Location] == 'NORMAL':
                     playerRank['wasStaff'] = True
                 else:
+                    if JSON[Location].lower() == "none": # If monthlyPackageRank expired, ignore "NONE". See: https://github.com/Snuggle/hypixel.py/issues/9
+                        continue
                     dirtyRank = JSON[Location].title()
                     dirtyRank = dirtyRank.replace("_", " ").replace("Mvp", "MVP").replace("Vip", "VIP").replace("Superstar", "MVP++") # pylint: disable=line-too-long
                     playerRank['rank'] = dirtyRank.replace(" Plus", "+").replace("Youtuber", "YouTube")
