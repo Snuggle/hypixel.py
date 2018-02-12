@@ -163,10 +163,15 @@ class Player:
         """ This is called whenever someone uses hypixel.Player('Snuggle').
             Get player's UUID, if it's a username. Get Hypixel-API data. """
         self.UUID = UUID
-        self.JSON = getJSON('player', uuid=UUID) # Get player's Hypixel-API JSON information.
         if len(UUID) <= 16: # If the UUID isn't actually a UUID... *rolls eyes* Lazy people.
+            self.JSON = getJSON('player', uuid=UUID) # Get player's Hypixel-API JSON information.
             JSON = self.JSON
             self.UUID = JSON['uuid'] # Pretend that nothing happened and get the UUID from the API.
+        elif len(UUID) == 32 or len(UUID) == 36: # If it's actually a UUID, with/without hyphens...
+            self.JSON = getJSON('player', uuid=UUID)
+        else:
+            raise PlayerNotFoundException(UUID)
+
 
     def getPlayerInfo(self):
         """ This is a simple function to return a bunch of common data about a player. """
