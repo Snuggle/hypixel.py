@@ -25,7 +25,7 @@ while True:
 
         elif optionInput.lower() == "twitter": # Okay this is a little more complicated
             try:
-                socialMedias = player.JSON['socialMedia'] # Check their social media
+                socialMedias = player.JSON['socialMedia']['links'] # Check their social media
                 print(socialMedias['TWITTER']) # And if they have a Twitter account, print it.
             except KeyError: # If an error comes up, saying they don't have a twitter account...
                 print("This user doesn't have a Twitter account linked.") # Say that.
