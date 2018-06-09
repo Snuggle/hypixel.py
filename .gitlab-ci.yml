@@ -14,8 +14,3 @@ python_latest:
     - cd docs/
     - make html
     - mv _build/html/ ../public/
-    artifacts:
-    paths:
-    - public
-    only:
-    - master
