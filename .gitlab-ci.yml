@@ -2,6 +2,7 @@ image: python:latest
 
 before_script:
   - python -V               # Print out python version for debugging
+  - pip install -r requirements.txt
 
 test:
   script:
@@ -11,7 +12,7 @@ test:
 pages:
   script:
   - pip install sphinx sphinx-rtd-theme
-  - cd doc ; make html
+  - make html
   - mv build/html/ ../public/
   artifacts:
     paths:
