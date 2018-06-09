@@ -12,7 +12,7 @@ test:
 pages:
   script:
   - pip install sphinx sphinx-rtd-theme
-  - sphinx-build -b html . build/
+  - make html
   - mv build/html/ ../public/
   artifacts:
     paths:
