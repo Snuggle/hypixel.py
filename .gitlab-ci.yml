@@ -1,4 +1,9 @@
+stages:
+  - testing
+  - documentation
+
 python_latest:
+    stage: testing
     image: python:latest
     
     before_script:
@@ -9,13 +14,8 @@ python_latest:
     - python ./tests/player.py
     - python ./tests/speed.py
     
-    script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd docs/
-    - make html
-    - mv _build/html/ ../public/
-    
 python_rc:
+    stage: testing
     image: python:rc
     
     before_script:
@@ -26,15 +26,11 @@ python_rc:
     - python ./tests/player.py
     - python ./tests/speed.py
     
-    script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd docs/
-    - make html
-    - mv _build/html/ ../public/
     
     allow_failure: true
     
 python_3.6:
+    stage: testing
     image: python:3.6
     
     before_script:
@@ -44,15 +40,10 @@ python_3.6:
     script:
     - python ./tests/player.py
     - python ./tests/speed.py
-    
-    script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd docs/
-    - make html
-    - mv _build/html/ ../public/
 
     
 python_3.5:
+    stage: testing
     image: python:3.5
     
     before_script:
@@ -63,14 +54,9 @@ python_3.5:
     - python ./tests/player.py
     - python ./tests/speed.py
     
-    script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd docs/
-    - make html
-    - mv _build/html/ ../public/
-    
 
 python_3.4:
+    stage: testing
     image: python:3.4
     
     before_script:
@@ -81,13 +67,9 @@ python_3.4:
     - python ./tests/player.py
     - python ./tests/speed.py
     
-    script:
-    - pip install sphinx sphinx-rtd-theme
-    - cd docs/
-    - make html
-    - mv _build/html/ ../public/
     
 python_2.x:
+    stage: testing
     image: python:2
     
     before_script:
@@ -98,10 +80,19 @@ python_2.x:
     - python ./tests/player.py
     - python ./tests/speed.py
     
+    
+    allow_failure: true
+    
+documentation:
+    stage: testing
+    image: python:latest
+    
+    before_script:
+      - python -V               # Print out python version for debugging
+      - pip install -r requirements.txt
+    
     script:
     - pip install sphinx sphinx-rtd-theme
     - cd docs/
     - make html
     - mv _build/html/ ../public/
-    
-    allow_failure: true
