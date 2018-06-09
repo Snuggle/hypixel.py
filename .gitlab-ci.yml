@@ -1,22 +1,23 @@
-image: python:latest
-
-before_script:
-  - python -V               # Print out python version for debugging
-  - pip install -r requirements.txt
-
-test:
-  script:
-    - python ./tests/player.py
-    - python ./tests/speed.py
-
-pages:
-  script:
-  - pip install sphinx sphinx-rtd-theme
-  - cd docs/
-  - make html
-  - mv _build/html/ ../public/
-  artifacts:
-    paths:
-    - public
-  only:
-  - master
+python_latest:
+    image: python:latest
+    
+    before_script:
+      - python -V               # Print out python version for debugging
+      - pip install -r requirements.txt
+    
+    test:
+      script:
+        - python ./tests/player.py
+        - python ./tests/speed.py
+    
+    pages:
+      script:
+      - pip install sphinx sphinx-rtd-theme
+      - cd docs/
+      - make html
+      - mv _build/html/ ../public/
+      artifacts:
+        paths:
+        - public
+      only:
+      - master
