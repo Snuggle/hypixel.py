@@ -84,7 +84,7 @@ python_2.x:
     allow_failure: true
     
 documentation:
-    stage: testing
+    stage: documentation
     image: python:latest
     
     before_script:
