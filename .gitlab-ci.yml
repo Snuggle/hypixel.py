@@ -1,0 +1,20 @@
+image: python:latest
+
+before_script:
+  - python -V               # Print out python version for debugging
+
+test:
+  script:
+    - python ./tests/player.py
+    - python ./tests/speed.py
+
+pages:
+  script:
+  - pip install sphinx sphinx-rtd-theme
+  - cd doc ; make html
+  - mv build/html/ ../public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
