@@ -93,6 +93,7 @@ pypi_deploy:
   script:
     - echo "password=$pypikey" >> .pypirc
     - cp .pypirc $HOME/.pypirc
+    - pip install twine
     - python setup.py sdist upload
 
   allow_failure: true
