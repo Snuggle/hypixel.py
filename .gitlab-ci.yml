@@ -1,6 +1,7 @@
 stages:
   - testing
   - documentation
+  - deploy
 
 # This is the latest stable release of Python.
 python_latest:
@@ -84,3 +85,13 @@ documentation:
     - cd docs/
     - make html
     - mv _build/html/ ../public/
+
+# Automatically deploy to PyPi.
+pypi_deploy:
+  stage: deploy
+  image: python:latest
+
+  script:
+    - echo "password=$pypikey" >> .pypirc
+    - cp .pypirc $HOME/.pypirc
+    - python setup.py sdist upload -r pypi
