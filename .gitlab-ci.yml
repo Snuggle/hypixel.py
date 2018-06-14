@@ -29,7 +29,6 @@ python_rc:
     - python ./tests/player.py
     - python ./tests/speed.py
     
-    
     allow_failure: true
     
 python_3.6:
@@ -95,3 +94,5 @@ pypi_deploy:
     - echo "password=$pypikey" >> .pypirc
     - cp .pypirc $HOME/.pypirc
     - python setup.py sdist upload -r pypi
+
+  allow_failure: true
