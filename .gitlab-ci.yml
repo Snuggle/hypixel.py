@@ -93,7 +93,7 @@ pypi_deploy:
   script:
     - echo "password=$pypikey" >> .pypirc
     - cp .pypirc $HOME/.pypirc
-    - python setup.py sdist upload pypi
+    - python setup.py sdist upload
 
   allow_failure: true
   # Allow failures in the deploy stage, as this is most likely the version number not being incremented.
