@@ -11,7 +11,7 @@ With this library, you can get statistics and information from most things on th
 
 It was created for free by `Snuggle <https://hypixel.net/player/Snuggle>`_, a volunteer-moderator for the network.
 
-You should totally take a look at the `GitHub page <https://github.com/Snuggle/hypixel.py>`_, too!
+You should totally take a look at the `GitLub page <https://gitlab.com/Snuggie/hypixel.py>`_, too!
 
 .. _how_to_use:
 
@@ -33,7 +33,7 @@ The original `Hypixel-bot <https://sprinkly.net/hypixelbot>`_ was a complete mes
 
 I have taken a lot of inspiration from how `Discord.py <https://github.com/Rapptz/discord.py>`_ had organised their documentation and code, and started using it as a way to learn how to actually create something for people to use.
 
-From this, I have learnt how to actually use GitHub, how to publish packages to `PyPi/pip <https://pypi.org/project/hypixel/>`_, how to use continuous integration testing with `Travis CI <https://travis-ci.com/SnuggIes/hypixel.py>`_, how to actually document code (Automatically, too!) and countless more things about Python as a language.
+From this, I have learnt how to actually use GitHub, how to publish packages to `PyPi/pip <https://pypi.org/project/hypixel/>`_, how to use automated/CI testing, how to actually document code (Automatically, too!) and countless more things about Python as a language.
 
 This is my first publically-released project, I'd love any feedback if you actually use this! ❤
 
@@ -41,5 +41,5 @@ This is my first publically-released project, I'd love any feedback if you actua
 Technical Details
 ------------------
 
-This library sends simple GET requests to Hypixel's RESTful API and serves as an object-oriented wrapper for people developing in Python, and who wish to use Hypixel's API.
-This comes with a simple implementation of caching and utilizes asynchronous requests.
+This library sends simple GET requests to Hypixel's REST API and serves as an object-oriented wrapper for people developing in Python, and who wish to use Hypixel's API.
+Also comes with a simple implementation of caching retrieved JSON and utilizes asynchronous requests for extra speed.

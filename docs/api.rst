@@ -7,7 +7,7 @@
 API Reference
 ===============
 
-This section outlines the functions and methods that are available as part of `hypixel.py <https://github.com/Snuggle/hypixel.py>`_.
+This section outlines the functions and methods that are available as part of `hypixel.py <https://gitlab.com/Snuggie/hypixel.py>`_.
 
 It is automatically generated and updated from the Docstrings present within the source.
 

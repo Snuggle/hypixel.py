@@ -7,6 +7,10 @@ What's New
 
 This page shows what has changed in different versions of the API.
 
+v0.7.7 - v0.7.8
+--------
+Switched the project over to GitLab. Made a few changes here and there, mostly updated documentation.
+
 v0.6.5
 --------
 Implemented URL-by-URL caching. This makes everything suuuuper fast. It doesn't cache any key-requests and cleans the cache over time. The default caching time is 60 seconds, but you can change this by using ``hypixel.setCacheTime(60.0)``.

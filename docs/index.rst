@@ -3,7 +3,7 @@ Welcome to hypixel.py's documentation!
 
 This is a simple, unofficial Python library which allows you to get values from the Hypixel-API.
 
-It is open-sourced and hosted on `GitHub <https://github.com/Snuggle/hypixel.py>`_.
+It is open-source and hosted on `GitHub <https://gitlab.com/Snuggie/hypixel.py>`_.
 
 Contents:
 
