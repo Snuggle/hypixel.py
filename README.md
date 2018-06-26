@@ -24,6 +24,10 @@
         <img src="https://img.shields.io/badge/made%20by-snuggle%20|%20hypixel%20moderator-brightgreen.svg?colorA=2d2306&colorB=705810"
              alt="Made by Snuggle">
     </a>
+    <a href="https://hypixel.readthedocs.io" style="text-decoration: none">
+        <img src="https://img.shields.io/readthedocs/hypixel.svg?colorA=2d2306&colorB=705810"
+             alt="Docs: Unknown">
+    </a>
 </p>
 
 hypixel.py: A simple, community Python library which allows you to get values from the [Hypixel API](https://api.hypixel.net) using JSON requests.
