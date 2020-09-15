@@ -20,19 +20,10 @@
         <img src="https://img.shields.io/pypi/pyversions/hypixel.svg?colorA=2d2306&colorB=705810"
              alt="Supported Python Versions">
     </a>
-    <a href="https://hypixel.net/player/Snuggle" style="text-decoration: none">
-        <img src="https://img.shields.io/badge/made%20by-snuggle%20|%20hypixel%20moderator-brightgreen.svg?colorA=2d2306&colorB=705810"
-             alt="Made by Snuggle">
-    </a>
-    <a href="https://hypixel.readthedocs.io" style="text-decoration: none">
-        <img src="https://img.shields.io/readthedocs/hypixel.svg?colorA=2d2306&colorB=705810"
-             alt="Docs: Unknown">
-    </a>
 </p>
 
 hypixel.py: A simple, community Python library which allows you to get values from the [Hypixel API](https://api.hypixel.net) using JSON requests.
 Designed for use with the latest version of Python with two previous versions also tested.<br><br>
-🎮🕹️ Being used to power my [Hypixel Discord bot](https://sprinkly.net/hypixelbot) and hopefully other people's projects in the future!
 
 ## How to install
 Installing hypixel.py is easy-peasy! Get going with: `pip install hypixel`, followed by placing `import hypixel` at the top of your code.
@@ -52,4 +43,4 @@ You could also look at my Hypixel bot for Discord, which uses this library and p
 Heckas! You would be super awesome if you did that! Get started by checking out the guidelines on contributing here, have a look at [the contributing guidelines](./docs/contributing.md)!
 
 ## Got any issues?
-Check out the current [Issues](https://github.com/Snuggle/hypixel.py/issues/) for anyone else with your issue, or post a [new Issue](https://github.com/Snuggle/hypixel.py/issues/new/) for help! 
+Check out the current [Issues](https://github.com/Snuggle/hypixel.py/issues/) for anyone else with your issue, or post a [new Issue](https://github.com/Snuggle/hypixel.py/issues/new/) for help!
