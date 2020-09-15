@@ -20,7 +20,7 @@ import hypixel
 from time import time
 from random import shuffle
 
-print("Test \"{}\" is now running...\n".format(os.path.basename(__file__)))
+print(f"Test \"{os.path.basename(__file__)}\" is now running...\n")
 
 API_KEY = os.environ['apikey']
 
@@ -38,4 +38,4 @@ end = time()
 
 totalTime = start-end
 
-print("\nDone! Speed test finished. Time taken: {}".format(end-start))
+print(f"\nDone! Speed test finished. Time taken: {end - start}")

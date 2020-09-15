@@ -10,18 +10,18 @@ options = ['rank', 'level', 'karma', 'twitter']
 
 while True:
     mahInput = input("\nPlease give me a Minecraft username/UUID: ")
-    optionInput = input("Please select from list: {}\n> ".format(options))
+    optionInput = input(f"Please select from list: {options}\n> ")
     player = hypixel.Player(mahInput) # Creates a hypixel.Player object using the input.
     try:
         if optionInput.lower() == "rank": # If user selects rank,
             print("The player is rank: " + player.getRank()['rank']) # Get the rank and print it.
-            print("Were they previously a staff member? {}".format(player.getRank()['wasStaff']))
+            print(f"Were they previously a staff member? {player.getRank()['wasStaff']}")
 
         elif optionInput.lower() == "level":
             print("The player is level: " + str(player.getLevel())) # Print the player's low level!
 
         elif optionInput.lower() == "karma":
-            print("The player has {} karma.".format(player.JSON['karma'])) # +25 karma ;)
+            print(f"The player has {player.JSON['karma']} karma.") # +25 karma ;)
 
         elif optionInput.lower() == "twitter": # Okay this is a little more complicated
             try:

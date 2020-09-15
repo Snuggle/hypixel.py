@@ -32,7 +32,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import hypixel
 import time
 
-print("Test \"{}\" is now running...\n".format(os.path.basename(__file__)))
+print(f"Test \"{os.path.basename(__file__)}\" is now running...\n")
 
 API_KEY = os.environ['apikey']
 
@@ -46,11 +46,11 @@ for player in ActualData:
         method_to_call = getattr(TestPlayer, 'get' + test)
         testdata = method_to_call()
         if testdata == player[test]:
-            print("\U00002714 {}".format(testdata))
+            print(f"✔ {testdata}")
         else:
-            print("\U0000274C {}, Expected: {} [FAILED]".format(testdata, player[test]))
+            print(f"❌ {testdata}, Expected: {player[test]} [FAILED]")
             TestFailed = True
-    print("UUID: {}\n".format(TestPlayer.UUID))
+    print(f"UUID: {TestPlayer.UUID}\n")
 
 if TestFailed is True:
     raise ValueError

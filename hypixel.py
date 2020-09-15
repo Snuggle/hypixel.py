@@ -50,10 +50,10 @@ def getJSON(typeOfRequest, **kwargs):
         for name, value in kwargs.items():
             if typeOfRequest == "player" and name == "uuid":
                 name = UUIDType
-            requestEnd += '&{}={}'.format(name, value)
+            requestEnd += f'&{name}={value}'
 
-    cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd) # TODO: Lowercase
-    allURLS = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+    cacheURL = HYPIXEL_API_URL + f"{typeOfRequest}?key={'None'}{requestEnd}" # TODO: Lowercase
+    allURLS = [HYPIXEL_API_URL + f'{typeOfRequest}?key={api_key}{requestEnd}'] # Create request URL.
 
     # If url exists in request cache, and time hasn't expired...
     if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
@@ -103,9 +103,9 @@ def setCacheTime(seconds):
     try:
         global cacheTime
         cacheTime = float(seconds)
-        return "Cache time has been successfully set to {} seconds.".format(cacheTime)
+        return f"Cache time has been successfully set to {cacheTime} seconds."
     except ValueError as chainedException:
-        raise HypixelAPIError("Invalid cache time \"{}\"".format(seconds)) from chainedException
+        raise HypixelAPIError(f"Invalid cache time \"{seconds}\"") from chainedException
 
 def setKeys(api_keys):
     """ This function is used to set your Hypixel API keys.
@@ -129,9 +129,9 @@ def setKeys(api_keys):
             if response['success'] is True:
                 verified_api_keys.append(api_key)
             else:
-                raise HypixelAPIError("hypixel/setKeys: Error with key XXXXXXXX-XXXX-XXXX-XXXX{} | {}".format(api_key[23:], response))
+                raise HypixelAPIError(f"hypixel/setKeys: Error with key XXXXXXXX-XXXX-XXXX-XXXX{api_key[23:]} | {response}")
         else:
-            raise HypixelAPIError("hypixel/setKeys: The key '{}' is not 36 characters.".format(api_key))
+            raise HypixelAPIError(f"hypixel/setKeys: The key '{api_key}' is not 36 characters.")
 
 class Player:
     """ This class represents a player on Hypixel as a single object.
