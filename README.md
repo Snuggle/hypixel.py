@@ -35,7 +35,25 @@ Designed for use with the latest version of Python with two previous versions al
 🎮🕹️ Being used to power my [Hypixel Discord bot](https://sprinkly.net/hypixelbot) and hopefully other people's projects in the future!
 
 ## How to install
-Installing hypixel.py is easy-peasy! Get going with: `pip install hypixel`, followed by placing `import hypixel` at the top of your code.
+
+If you're using Windows:
+```
+pip install hypixel
+```
+
+If you're using Linux:
+
+```
+python3 -m pip install -U hypixel
+```
+
+If you're using Mac:
+
+```
+pip3 install hypixel
+```
+
+Then, put on the top of your code ```import hypixel```.
 
 ## Recent Changes
 For the latest news and updates to this library, check out our [changelog](http://hypixel.readthedocs.io/en/latest/whats_new.html).
