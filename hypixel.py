@@ -336,7 +336,7 @@ class Auction:
         key = choice(verified_api_keys)
         if isinstance(PageNumber, int):
             PageNumber = str(PageNumber)
-        return grequests.get("https://api.hypixel.net/skyblock/auctions?key="+key+"&page="+PageNumber)
+        return getJSON("auction", page = PageNumber)
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
