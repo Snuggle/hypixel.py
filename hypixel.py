@@ -327,7 +327,16 @@ class Guild:
             roleList.append(member['name'])
 
         return allGuildMembers
-
+class Auction:
+    def __init__(self):
+        """"Called to create an Auction class."""
+        pass    
+    def getAuctionInfo(self, PageNumber):
+        """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
+        key = choice(verified_api_keys)
+        if isinstance(PageNumber, int):
+            PageNumber = str(PageNumber)
+        return grequests.get("https://api.hypixel.net/skyblock/auctions?key="+key+"&page="+PageNumber)
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
