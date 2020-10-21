@@ -335,7 +335,7 @@ class Auction:
         """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
         if isinstance(PageNumber, int):
             PageNumber = str(PageNumber)
-        return getJSON("auction", page = PageNumber)
+        return getJSON("skyblock/auction", page = PageNumber)
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
