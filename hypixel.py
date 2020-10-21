@@ -333,7 +333,6 @@ class Auction:
         pass    
     def getAuctionInfo(self, PageNumber):
         """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
-        key = choice(verified_api_keys)
         if isinstance(PageNumber, int):
             PageNumber = str(PageNumber)
         return getJSON("auction", page = PageNumber)
