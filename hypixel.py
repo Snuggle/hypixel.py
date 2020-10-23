@@ -368,6 +368,7 @@ class SkyblockPlayer:
             self.JSON = getJSON('skyblock/player' uuid = UUID)
         else:
             raise PlayerNotFoundException(UUID)
+        
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
