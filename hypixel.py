@@ -167,7 +167,7 @@ class Player:
             self.JSON = getJSON('player', uuid=UUID) # Get player's Hypixel-API JSON information.
             JSON = self.JSON
             self.UUID = JSON['uuid'] # Pretend that nothing happened and get the UUID from the API.
-        elif len(UUID) == 32 or len(UUID) == 36: # If it's actually a UUID, with/without hyphens...
+        elif len(UUID) in (32, 36): # If it's actually a UUID, with/without hyphens...
             self.JSON = getJSON('player', uuid=UUID)
         else:
             raise PlayerNotFoundException(UUID)
