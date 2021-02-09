@@ -23,7 +23,10 @@ class PlayerNotFoundException(Exception):
     """ Simple exception if a player/UUID is not found. This exception can usually be ignored.
         You can catch this exception with ``except hypixel.PlayerNotFoundException:`` """
     pass
-
+class SkyblockUUIDRequired(Exception):
+    """Simple exception to tell the user that in the Skyblock API, UUID's are required and names cannot be used.
+    Catch this exception with ``except hypixel.SkyblockUUIDRequired:``"""
+    pass
 class GuildIDNotValid(Exception):
     """ Simple exception if a Guild is not found using a GuildID. This exception can usually be ignored.
         You can catch this exception with ``except hypixel.GuildIDNotValid:`` """
@@ -46,7 +49,8 @@ def getJSON(typeOfRequest, **kwargs):
             uuid = kwargs['uuid']
             if len(uuid) <= 16:
                 UUIDType = 'name' # TODO: I could probably clean this up somehow.
-
+        if typeOfRequest == 'skyblockplayer':
+            typeOfRequest = "/skyblock/profiles"
         for name, value in kwargs.items():
             if typeOfRequest == "player" and name == "uuid":
                 name = UUIDType
@@ -145,7 +149,7 @@ class Player:
         Parameters
         -----------
         Username/UUID : string
-            Either the UUID or the username (Depreciated) for a Minecraft player.
+            Either the UUID or the username (Deprecated) for a Minecraft player.
 
         Attributes
         -----------
@@ -327,7 +331,44 @@ class Guild:
             roleList.append(member['name'])
 
         return allGuildMembers
+class Auction:
+    """ This class represents an auction on Hypixel Skyblock as a single object.
+        
+    """
+    def __init__(self):
+        """"Called to create an Auction class."""
+        pass    
+    def getAuctionInfo(self, PageNumber):
+        """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
+        if isinstance(PageNumber, int):
+            PageNumber = str(PageNumber)
+        return getJSON("skyblock/auction", page = PageNumber)
+    #TODO Add more info
 
+class SkyblockPlayer:
+    """A class for a Skyblock player. It requires a UUID, and will return stats on the player
+    Raises
+    ------
+    SkyblockUUIDRequired
+        If you pass in a normal username such as RedKaneChironic, will throw an error as Hypixel Skyblock's API currently does not support usernames
+    PlayerNotFoundException
+        If the player cannot be found, this will be raised.
+        
+    Parameters
+    -----------
+    UUID: string
+        UUID of the Player
+    JSON: string
+        Raw JSON data"""
+    def __init__(self, UUID):
+        self.UUID = UUID
+        if len(UUID) <= 16: #UUID is a Minecraft username
+            raise SkyblockUUIDRequired(UUID)
+        elif len(UUID) == 36 or len(UUID) == 32:
+            self.JSON = getJSON('skyblock/player' uuid = UUID)
+        else:
+            raise PlayerNotFoundException(UUID)
+        
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
