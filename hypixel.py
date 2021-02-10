@@ -68,7 +68,7 @@ def getJSON(typeOfRequest, **kwargs):
         for r in responses:
             response = r.json()
 
-        if response['success'] is False:
+        if not response['success']:
             raise HypixelAPIError(response)
         if typeOfRequest == 'player':
             if response['player'] is None:
@@ -130,7 +130,7 @@ def setKeys(api_keys):
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
             response = getJSON('key', key=api_key)
-            if response['success'] is True:
+            if response['success']:
                 verified_api_keys.append(api_key)
             else:
                 raise HypixelAPIError("hypixel/setKeys: Error with key XXXXXXXX-XXXX-XXXX-XXXX{} | {}".format(api_key[23:], response))
@@ -202,14 +202,10 @@ class Player:
     def getLevel(self):
         """ This function calls leveling.py to calculate a player's network level. """
         JSON = self.JSON
-        try:
-            networkExp = JSON['networkExp']
-        except KeyError:
-            networkExp = 0
-        try:
-            networkLevel = JSON['networkLevel']
-        except KeyError:
-            networkLevel = 0
+        
+        networkExp = JSON.get('networkExp', 0)        
+        networkLevel = JSON.get('networkLevel', 0)
+        
         exp = leveling.getExperience(networkExp, networkLevel)
         myoutput = leveling.getExactLevel(exp)
         return myoutput
@@ -314,7 +310,7 @@ class Guild:
             try:
                 if user.startswith(UUIDResolverAPI):
                     allURLS[uindex] = responses[i].json()['name']
-                    i = i + 1
+                    i += 1
             except AttributeError:
                 pass
         i = 0
@@ -330,6 +326,8 @@ class Guild:
             roleList.append(member['name'])
 
         return allGuildMembers
+    
+    
 class Auction:
     """ This class represents an auction on Hypixel Skyblock as a single object.
         
@@ -339,9 +337,7 @@ class Auction:
         pass    
     def getAuctionInfo(self, PageNumber):
         """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
-        if isinstance(PageNumber, int):
-            PageNumber = str(PageNumber)
-        return getJSON("skyblock/auction", page = PageNumber)
+        return getJSON("skyblock/auction", page = str(PageNumber))
     #TODO Add more info
 
 class SkyblockPlayer:
@@ -363,7 +359,7 @@ class SkyblockPlayer:
         self.UUID = UUID
         if len(UUID) <= 16: #UUID is a Minecraft username
             raise SkyblockUUIDRequired(UUID)
-        elif len(UUID) == 36 or len(UUID) == 32:
+        elif len(UUID) in (32, 36):
             self.JSON = getJSON('skyblock/player' uuid = UUID)
         else:
             raise PlayerNotFoundException(UUID)
