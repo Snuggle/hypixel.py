@@ -2,9 +2,9 @@
 
 ActualData = [
               {'Name': 'ByeByeBaePls',
-              'Rank': {'wasStaff': False, 'rank': 'MVP+'},
-              'Level': 13.7633,
-              'GuildID': '54b9e7060cf2141da4fb3449',
+              'Rank': {'wasStaff': False, 'rank': 'MVP PLUS'},
+              'Level': 16.184484210526314,
+              'GuildID': None,
               'Session': None},
 
               {'Name': 'kevinkool',
@@ -20,8 +20,8 @@ ActualData = [
                'Session': None},
 
               {'Name': 'Kqwqii',
-               'Rank': {'wasStaff': False, 'rank': 'MVP+'},
-               'Level': 5.1,
+               'Rank': {'wasStaff': False, 'rank': 'MVP PLUS'},
+               'Level': 5.85,
                'GuildID': None,
                'Session': None}
               ]
