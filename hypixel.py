@@ -360,7 +360,7 @@ class SkyblockPlayer:
         if len(UUID) <= 16: #UUID is a Minecraft username
             raise SkyblockUUIDRequired(UUID)
         elif len(UUID) in (32, 36):
-            self.JSON = getJSON('skyblock/player' uuid = UUID)
+            self.JSON = getJSON('skyblock/player', uuid = UUID)
         else:
             raise PlayerNotFoundException(UUID)
         
