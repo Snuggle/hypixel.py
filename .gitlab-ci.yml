@@ -1,5 +1,4 @@
 stages:
-  - testing
   - documentation
   - deploy
 
