@@ -1,4 +1,5 @@
 stages:
+  - testing
   - documentation
   - deploy
 
@@ -14,6 +15,8 @@ python_latest:
     script:                                # Run test scripts.
     - python ./tests/player.py
     - python ./tests/speed.py
+    
+    allow_failure: true
     
 # Python release candidate is prone to breakages. This should be allowed to fail.
 python_rc:
@@ -41,6 +44,9 @@ python_3.6:
     script:                                # Run test scripts.
     - python ./tests/player.py
     - python ./tests/speed.py
+    
+    allow_failure: true
+
 
     
 python_3.5:
@@ -55,6 +61,9 @@ python_3.5:
     - python ./tests/player.py
     - python ./tests/speed.py
     
+    allow_failure: true
+
+    
 
 python_3.4:
     stage: testing
@@ -67,6 +76,8 @@ python_3.4:
     script:                                # Run test scripts.
     - python ./tests/player.py
     - python ./tests/speed.py
+    
+    allow_failure: true
     
   
 # This attempts building the documentation.
