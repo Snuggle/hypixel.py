@@ -8,7 +8,7 @@ ActualData = [
               'Session': None},
 
               {'Name': 'kevinkool',
-               'Rank': {'wasStaff': True, 'rank': 'MVP+'},
+               'Rank': {'wasStaff': True, 'rank': 'MVP PLUS'},
                'Level': 43.25043478260869,
                'GuildID': None,
                'Session': None},
