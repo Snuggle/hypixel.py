@@ -209,7 +209,11 @@ class Player:
         exp = leveling.getExperience(networkExp, networkLevel)
         myoutput = leveling.getExactLevel(exp)
         return myoutput
-
+    
+    def getUUID(self):
+        JSON = self.JSON
+        return JSON['uuid']
+        
     def getRank(self):
         """ This function returns a player's rank, from their data. """
         JSON = self.JSON
