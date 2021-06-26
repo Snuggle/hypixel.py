@@ -7,7 +7,7 @@ __version__ = '0.8.0'
 from random import choice
 from time import time
 import grequests
-
+import json
 import leveling
 
 HYPIXEL_API_URL = 'https://api.hypixel.net/'
@@ -331,7 +331,32 @@ class Guild:
 
         return allGuildMembers
     
-    
+
+class AuctionHouse:
+    def __init__(self):
+        data = {
+            'auctions': [
+
+            ]
+        }
+
+    def getauctions(self):
+        data = self.data
+        url_base = f"https://api.hypixel.net/skyblock/auctions"
+        firstpage = json.loads(grequests.get(url_base).text) #get the first page and load it as a dictionary
+        
+        if firstpage['success']:
+            for auc in pagedata:
+                data[auctions].append(auc)#append it to the dictonary
+            for page in range(1, firstpage['pages'] - 1): #for each page - 1 since we checked 0
+                page_url = url_base + f'?page={page}'
+                pagedata = json.loads(grequests.get('page_url').text)#convert to dictionary
+                for auc in pagedata:
+                    data[auctions].append(auc)#append it to the dictonary
+            return(data)
+
+
+
 class Auction:
     """ This class represents an auction on Hypixel Skyblock as a single object.
         
