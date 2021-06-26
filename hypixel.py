@@ -333,29 +333,38 @@ class Guild:
     
 
 class AuctionHouse:
+    data = {}
     def __init__(self):
-        data = {
-            'auctions': [
+        #Not much needed to do here, the getacutionitems method does the work
+        pass
 
-            ]
-        }
-
-    def getauctions(self):
+    def getauctionitems(self):
         data = self.data
-        url_base = f"https://api.hypixel.net/skyblock/auctions"
-        firstpage = json.loads(grequests.get(url_base).text) #get the first page and load it as a dictionary
-        
-        if firstpage['success']:
-            for auc in pagedata:
-                data[auctions].append(auc)#append it to the dictonary
-            for page in range(1, firstpage['pages'] - 1): #for each page - 1 since we checked 0
-                page_url = url_base + f'?page={page}'
-                pagedata = json.loads(grequests.get('page_url').text)#convert to dictionary
-                for auc in pagedata:
-                    data[auctions].append(auc)#append it to the dictonary
-            return(data)
+        base_url = "https://api.hypixel.net/skyblock/auctions" #set a url to make requests from
+        resp = grequests.get(base_url)
+        for res in grequests.map([resp]):
+            res = json.loads(res.content)
+            pages = res['totalPages'] #get total pages needed to request
+            if res['success']:
+                data['auctions'] = [] #define auction list
+                for auction in res['auctions']:
+                        data['auctions'].append(auction) #add the first page auctions
+                pageurls = [] 
+                for page in range(1, (pages)):
+                    purl = base_url + '?page={}'.format(page) #generate urls to request from the pages
+                    pageurls.append(purl)
+                resps = (grequests.get(url) for url in pageurls)
+                for r in grequests.map(resps):
+                    respd = json.loads(r.content)
+                    if respd['success']:
+                        for auction in respd['auctions']:
+                            data['auctions'].append(auction) # append auctions of other pages
+                    else:
+                        raise RuntimeError('GET Request failed')
 
-
+            else:
+                raise RuntimeError('Page 0 GET Request failed')
+        return data
 
 class Auction:
     """ This class represents an auction on Hypixel Skyblock as a single object.
