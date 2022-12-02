@@ -211,6 +211,7 @@ class Player:
         return myoutput
     
     def getUUID(self):
+        """ This function returns a player's UUID. """
         JSON = self.JSON
         return JSON['uuid']
         
@@ -251,6 +252,19 @@ class Player:
         except HypixelAPIError:
             session = None
         return session
+    
+    def getUUIDsOfFriends(self):
+        """ This function returns a list of the UUIDs of all the player's friends. """
+        friendsInfo = getJSON('friends', uuid=self.UUID)
+        friendsUUIDS = []
+        for friend in friendsInfo['records']:
+            friendsUUIDS.extend(uuid for uuid in [friend["uuidReceiver"], friend["uuidSender"]] if uuid != self.UUID)
+        return friendsUUIDS
+    
+    def isOnline(self):
+        """ This function returns a bool representing whether the player is online. """
+        onlineStatus = getJSON('status', uuid=self.UUID)
+        return onlineStatus['session']['online']
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
