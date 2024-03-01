@@ -36,34 +36,31 @@ class HypixelAPIError(Exception):
     """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
 
-def getJSON(typeOfRequest, **kwargs):
+def getJSON(typeOfRequest: str, **kwargs):
     """ This private function is used for getting JSON from Hypixel's Public API. """
     requestEnd = ''
-    if typeOfRequest == 'key':
-        api_key = kwargs['key']
-    else:
-        api_key = choice(verified_api_keys) # Select a random API key from the list available.
+    api_key = choice(verified_api_keys) # Select a random API key from the list available.
 
-        if typeOfRequest == 'player':
-            UUIDType = 'uuid'
-            uuid = kwargs['uuid']
-            if len(uuid) <= 16:
-                UUIDType = 'name' # TODO: I could probably clean this up somehow.
-        if typeOfRequest == 'skyblockplayer':
-            typeOfRequest = "/skyblock/profiles"
-        for name, value in kwargs.items():
-            if typeOfRequest == "player" and name == "uuid":
-                name = UUIDType
-            requestEnd += '&{}={}'.format(name, value)
+    if typeOfRequest == 'player':
+        UUIDType = 'uuid'
+        uuid = kwargs['uuid']
+        if len(uuid) <= 16:
+            UUIDType = 'name' # TODO: I could probably clean this up somehow.
+    if typeOfRequest == 'skyblockplayer':
+        typeOfRequest = "/skyblock/profiles"
+    for name, value in kwargs.items():
+        if typeOfRequest == "player" and name == "uuid":
+            name = UUIDType
+        requestEnd += '&{}={}'.format(name, value)
 
-    cacheURL = HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, "None", requestEnd) # TODO: Lowercase
-    allURLS = [HYPIXEL_API_URL + '{}?key={}{}'.format(typeOfRequest, api_key, requestEnd)] # Create request URL.
+    cacheURL = HYPIXEL_API_URL + '{}?{}'.format(typeOfRequest, requestEnd) # TODO: Lowercase
+    allURLS = [HYPIXEL_API_URL + '{}?{}'.format(typeOfRequest, requestEnd)] # Create request URL.
 
     # If url exists in request cache, and time hasn't expired...
     if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
         response = requestCache[cacheURL]['data'] # TODO: Extend cache time
     else:
-        requests = (grequests.get(u) for u in allURLS)
+        requests = (grequests.get(u, headers={"API-Key": api_key}) for u in allURLS)
         responses = grequests.imap(requests)
         for r in responses:
             fullResponse = r
@@ -117,14 +114,8 @@ def setCacheTime(seconds):
     except ValueError as chainedException:
         raise HypixelAPIError("Invalid cache time \"{}\"".format(seconds)) from chainedException
 
-def setKeys(api_keys):
+def setKeys(api_keys: list):
     """ This function is used to set your Hypixel API keys.
-        It also checks that they are valid/working.
-
-        Raises
-        ------
-        HypixelAPIError
-            If any of the keys are invalid or don't work, this will be raised.
 
         Parameters
         -----------
@@ -135,11 +126,7 @@ def setKeys(api_keys):
     """
     for api_key in api_keys:
         if len(api_key) == HYPIXEL_API_KEY_LENGTH:
-            response = getJSON('key', key=api_key)
-            if response['success']:
-                verified_api_keys.append(api_key)
-            else:
-                raise HypixelAPIError("hypixel/setKeys: Error with key XXXXXXXX-XXXX-XXXX-XXXX{} | {}".format(api_key[23:], response))
+            verified_api_keys.append(api_key)
         else:
             raise HypixelAPIError("hypixel/setKeys: The key '{}' is not 36 characters.".format(api_key))
 
