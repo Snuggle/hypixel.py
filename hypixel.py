@@ -5,7 +5,7 @@ __version__ = '0.8.0'
 # TODO: Add API-usage stat-tracking. Like a counter of the number of requests and how many per minute etc.
 
 from random import choice
-from time import time
+from time import time, sleep
 import grequests
 
 import leveling
@@ -66,7 +66,13 @@ def getJSON(typeOfRequest, **kwargs):
         requests = (grequests.get(u) for u in allURLS)
         responses = grequests.imap(requests)
         for r in responses:
-            response = r.json()
+            fullResponse = r
+        response, responseHeaders = fullResponse.json(), fullResponse.headers
+
+        if 'RateLimit-Remaining' in responseHeaders:
+            remaining_allowed_requests = int(responseHeaders['RateLimit-Remaining'])
+            if remaining_allowed_requests <= 1:
+                sleep(int(responseHeaders['RateLimit-Reset']) + 1)
 
         if not response['success']:
             raise HypixelAPIError(response)
@@ -176,15 +182,11 @@ class Player:
         else:
             raise PlayerNotFoundException(UUID)
 
-
     def getPlayerInfo(self):
         """ This is a simple function to return a bunch of common data about a player. """
         JSON = self.JSON
-        playerInfo = {}
-        playerInfo['uuid'] = self.UUID
-        playerInfo['displayName'] = Player.getName(self)
-        playerInfo['rank'] = Player.getRank(self)
-        playerInfo['networkLevel'] = Player.getLevel(self)
+        playerInfo = {'uuid': self.UUID, 'displayName': Player.getName(self),
+                      'rank': Player.getRank(self), 'networkLevel': Player.getLevel(self)}
         JSONKeys = ['karma', 'firstLogin', 'lastLogin',
                     'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
         for item in JSONKeys:
