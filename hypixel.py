@@ -202,19 +202,19 @@ class Player:
     def getLevel(self):
         """ This function calls leveling.py to calculate a player's network level. """
         JSON = self.JSON
-        
-        networkExp = JSON.get('networkExp', 0)        
+
+        networkExp = JSON.get('networkExp', 0)
         networkLevel = JSON.get('networkLevel', 0)
-        
+
         exp = leveling.getExperience(networkExp, networkLevel)
         myoutput = leveling.getExactLevel(exp)
         return myoutput
-    
+
     def getUUID(self):
         """ This function returns a player's UUID. """
         JSON = self.JSON
         return JSON['uuid']
-        
+
     def getRank(self):
         """ This function returns a player's rank, from their data. """
         JSON = self.JSON
@@ -252,19 +252,10 @@ class Player:
         except HypixelAPIError:
             session = None
         return session
-    
-    def getUUIDsOfFriends(self):
-        """ This function returns a list of the UUIDs of all the player's friends. """
-        friendsInfo = getJSON('friends', uuid=self.UUID)
-        friendsUUIDS = []
-        for friend in friendsInfo['records']:
-            friendsUUIDS.extend(uuid for uuid in [friend["uuidReceiver"], friend["uuidSender"]] if uuid != self.UUID)
-        return friendsUUIDS
-    
+
     def isOnline(self):
         """ This function returns a bool representing whether the player is online. """
-        onlineStatus = getJSON('status', uuid=self.UUID)
-        return onlineStatus['session']['online']
+        return getJSON('status', uuid=self.UUID)['session']['online']
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
@@ -344,15 +335,15 @@ class Guild:
             roleList.append(member['name'])
 
         return allGuildMembers
-    
-    
+
+
 class Auction:
     """ This class represents an auction on Hypixel Skyblock as a single object.
-        
+
     """
     def __init__(self):
         """"Called to create an Auction class."""
-        pass    
+        pass
     def getAuctionInfo(self, PageNumber):
         """Gets all the auction info for a specified page. PageNumber is the page that is requested and can be in int form or string"""
         return getJSON("skyblock/auction", page = str(PageNumber))
@@ -366,7 +357,7 @@ class SkyblockPlayer:
         If you pass in a normal username such as RedKaneChironic, will throw an error as Hypixel Skyblock's API currently does not support usernames
     PlayerNotFoundException
         If the player cannot be found, this will be raised.
-        
+
     Parameters
     -----------
     UUID: string
@@ -381,7 +372,7 @@ class SkyblockPlayer:
             self.JSON = getJSON('skyblock/player', uuid = UUID)
         else:
             raise PlayerNotFoundException(UUID)
-        
+
 if __name__ == "__main__":
     print("This is a Python library and shouldn't be run directly.\n"
           "Please look at https://github.com/Snuggle/hypixel.py for usage & installation information.")
