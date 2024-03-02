@@ -157,18 +157,14 @@ class Player:
             The player's UUID.
     """
 
-    def __init__(self, UUID):
-        """ This is called whenever someone uses hypixel.Player('Snuggle').
-            Get player's UUID, if it's a username. Get Hypixel-API data. """
-        self.UUID = UUID
-        if len(UUID) <= 16: # If the UUID isn't actually a UUID... *rolls eyes* Lazy people.
-            self.JSON = getJSON('player', uuid=UUID) # Get player's Hypixel-API JSON information.
-            JSON = self.JSON
-            self.UUID = JSON['uuid'] # Pretend that nothing happened and get the UUID from the API.
-        elif len(UUID) in (32, 36): # If it's actually a UUID, with/without hyphens...
-            self.JSON = getJSON('player', uuid=UUID)
-        else:
+    def __init__(self, UUID: str):
+        """ This is called whenever someone uses, e.g., hypixel.Player('Snuggle').
+            Creates an object representing calls to the Hypixel API and info for this player. """
+        if len(UUID) > 16 and len(UUID) not in (32, 36):
             raise PlayerNotFoundException(UUID)
+        self.JSON = getJSON('player', uuid=UUID) # Get the player's Hypixel-API JSON information.
+                                                 # Even if `UUID` is actually the ign, this still works.
+        self.UUID: str = self.JSON['uuid']
 
     def getPlayerInfo(self) -> dict:
         """ This is a simple function to return a bunch of common data about a player. """
@@ -296,7 +292,7 @@ class Guild:
             The Guild's GuildID.
     """
 
-    def __init__(self, GuildID):
+    def __init__(self, GuildID: str):
         try:
             if len(GuildID) == 24:
                 self.GuildID = GuildID
