@@ -36,7 +36,7 @@ class HypixelAPIError(Exception):
     """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
 
-def getJSON(typeOfRequest: str, **kwargs):
+def getJSON(typeOfRequest: str, **kwargs) -> dict:
     """ This private function is used for getting JSON from Hypixel's Public API. """
     requestEnd = ''
     api_key = choice(verified_api_keys) # Select a random API key from the list available.
@@ -171,7 +171,7 @@ class Player:
         else:
             raise PlayerNotFoundException(UUID)
 
-    def getPlayerInfo(self):
+    def getPlayerInfo(self) -> dict:
         """ This is a simple function to return a bunch of common data about a player. """
         JSON = self.JSON
         playerInfo = {'uuid': self.UUID, 'displayName': Player.getName(self),
@@ -185,7 +185,7 @@ class Player:
                 pass
         return playerInfo
 
-    def getName(self):
+    def getName(self) -> str:
         """ Just return player's name. """
         JSON = self.JSON
         return JSON['displayname']
@@ -201,12 +201,12 @@ class Player:
         myoutput = leveling.getExactLevel(exp)
         return myoutput
 
-    def getUUID(self):
+    def getUUID(self) -> str:
         """ This function returns a player's UUID. """
         JSON = self.JSON
         return JSON['uuid']
 
-    def getRank(self):
+    def getRank(self) -> dict:
         """ This function returns a player's rank, from their data. """
         JSON = self.JSON
         playerRank = {} # Creating dictionary.
@@ -229,7 +229,7 @@ class Player:
 
         return playerRank
 
-    def getGuildID(self):
+    def getGuildID(self) -> str:
         """ This function is used to get a GuildID from a player. """
         UUID = self.UUID
         GuildID = getJSON('findGuild', byUuid=UUID)
@@ -244,9 +244,36 @@ class Player:
             session = None
         return session
 
-    def isOnline(self):
+    def isOnline(self) -> bool:
         """ This function returns a bool representing whether the player is online. """
         return getJSON('status', uuid=self.UUID)['session']['online']
+
+    def getPitXP(self) -> int:
+        return self._nestedGet(['stats', 'Pit', 'profile', 'xp'], 0)
+
+    def getBedwarsXP(self) -> int:
+        xp = self._nestedGet(['stats', 'Bedwars', 'Experience'], 0)
+        assert int(xp) == xp # If xp is a float type, ensure its decimal part is just 0.
+        return int(xp)
+
+    def getBedwarsStar(self) -> int:
+        return self._nestedGet(['achievements', 'bedwars_level'], 0)
+
+    def getBedwarsFinalKills(self) -> int:
+        return self._nestedGet(['stats', 'Bedwars', 'final_kills_bedwars'], 0)
+
+    def getBedwarsFinalDeaths(self) -> int:
+        return self._nestedGet(['stats', 'Bedwars', 'final_deaths_bedwars'], 0)
+
+    def _nestedGet(self, nested_keys: list, default_val):
+        d = self.JSON
+        try:
+            for k in nested_keys:
+                d = d[k]
+            return_val = d
+        except KeyError:
+            return_val = default_val
+        return return_val
 
 class Guild:
     """ This class represents a guild on Hypixel as a single object.
