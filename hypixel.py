@@ -156,9 +156,6 @@ class Player:
             The player's UUID.
     """
 
-    JSON = None
-    UUID = None
-
     def __init__(self, UUID):
         """ This is called whenever someone uses hypixel.Player('Snuggle').
             Get player's UUID, if it's a username. Get Hypixel-API data. """
@@ -296,10 +293,8 @@ class Guild:
 
         GuildID : string
             The Guild's GuildID.
-
     """
-    JSON = None
-    GuildID = None
+
     def __init__(self, GuildID):
         try:
             if len(GuildID) == 24:
@@ -360,9 +355,7 @@ class Guild:
 
 
 class Auction:
-    """ This class represents an auction on Hypixel Skyblock as a single object.
-
-    """
+    """ This class represents an auction on Hypixel Skyblock as a single object. """
     def __init__(self):
         """"Called to create an Auction class."""
         pass
