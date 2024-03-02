@@ -6,6 +6,7 @@ __version__ = '0.8.0'
 
 from random import choice
 from time import time, sleep
+from copy import deepcopy
 import grequests
 
 import leveling
@@ -174,8 +175,8 @@ class Player:
     def getPlayerInfo(self) -> dict:
         """ This is a simple function to return a bunch of common data about a player. """
         JSON = self.JSON
-        playerInfo = {'uuid': self.UUID, 'displayName': Player.getName(self),
-                      'rank': Player.getRank(self), 'networkLevel': Player.getLevel(self)}
+        playerInfo = {'uuid': self.UUID, 'displayName': self.getName(),
+                      'rank': self.getRank(), 'networkLevel': self.getLevel()}
         JSONKeys = ['karma', 'firstLogin', 'lastLogin',
                     'mcVersionRp', 'networkExp', 'socialMedia', 'prefix']
         for item in JSONKeys:
@@ -183,7 +184,7 @@ class Player:
                 playerInfo[item] = JSON[item]
             except KeyError:
                 pass
-        return playerInfo
+        return deepcopy(playerInfo)
 
     def getName(self) -> str:
         """ Just return player's name. """
@@ -273,6 +274,8 @@ class Player:
             return_val = d
         except KeyError:
             return_val = default_val
+        if not isinstance(return_val, (str, float, int)):
+            return_val = deepcopy(return_val) # may be a mutable type
         return return_val
 
 class Guild:
@@ -282,7 +285,8 @@ class Guild:
         Parameters
         -----------
         GuildID : string
-            The ID for a Guild. This can be found by using :class:`Player.getGuildID()`.
+            The ID for a Guild. This can be found by using `player.getGuildID()`,
+            where `player` is an object of the `Player` class.
 
 
         Attributes
