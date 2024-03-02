@@ -61,7 +61,7 @@ def getJSON(typeOfRequest: str, **kwargs) -> dict:
 
     # If url exists in request cache, and time hasn't expired...
     if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
-        response = requestCache[cacheURL]['data'] # TODO: Extend cache time
+        response = deepcopy(requestCache[cacheURL]['data']) # TODO: Extend cache time
     else:
         requests = (grequests.get(u, headers={"API-Key": api_key}) for u in allURLS)
         responses = grequests.imap(requests)
