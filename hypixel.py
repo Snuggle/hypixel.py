@@ -7,6 +7,7 @@ __version__ = '0.8.0'
 from random import choice
 from time import time, sleep
 from copy import deepcopy
+from typing import List, Iterable, Dict, Union
 import grequests
 
 import leveling
@@ -15,9 +16,9 @@ HYPIXEL_API_URL = 'https://api.hypixel.net/'
 UUIDResolverAPI = "https://sessionserver.mojang.com/session/minecraft/profile/"
 
 HYPIXEL_API_KEY_LENGTH = 36 # This is the length of a Hypixel-API key. Don't change from 36.
-verified_api_keys = []
+verified_api_keys: List[str] = []
 
-requestCache = {}
+requestCache: Dict[str, Dict] = {}
 cacheTime = 60
 
 class PlayerNotFoundException(Exception):
@@ -207,7 +208,7 @@ class Player:
     def getRank(self) -> dict:
         """ This function returns a player's rank, from their data. """
         JSON = self.JSON
-        playerRank = {} # Creating dictionary.
+        playerRank: Dict[str, Union[bool, str]] = {} # Creating dictionary.
         playerRank['wasStaff'] = False
         possibleRankLocations = ['packageRank', 'newPackageRank', 'monthlyPackageRank', 'rank']
         # May need to add support for multiple monthlyPackageRank's in future.
@@ -247,23 +248,23 @@ class Player:
         return getJSON('status', uuid=self.UUID)['session']['online']
 
     def getPitXP(self) -> int:
-        return self._nestedGet(['stats', 'Pit', 'profile', 'xp'], 0)
+        return self._nestedGet(('stats', 'Pit', 'profile', 'xp'), 0)
 
     def getBedwarsXP(self) -> int:
-        xp = self._nestedGet(['stats', 'Bedwars', 'Experience'], 0)
+        xp = self._nestedGet(('stats', 'Bedwars', 'Experience'), 0)
         assert int(xp) == xp # If xp is a float type, ensure its decimal part is just 0.
         return int(xp)
 
     def getBedwarsStar(self) -> int:
-        return self._nestedGet(['achievements', 'bedwars_level'], 0)
+        return self._nestedGet(('achievements', 'bedwars_level'), 0)
 
     def getBedwarsFinalKills(self) -> int:
-        return self._nestedGet(['stats', 'Bedwars', 'final_kills_bedwars'], 0)
+        return self._nestedGet(('stats', 'Bedwars', 'final_kills_bedwars'), 0)
 
     def getBedwarsFinalDeaths(self) -> int:
-        return self._nestedGet(['stats', 'Bedwars', 'final_deaths_bedwars'], 0)
+        return self._nestedGet(('stats', 'Bedwars', 'final_deaths_bedwars'), 0)
 
-    def _nestedGet(self, nested_keys: list, default_val):
+    def _nestedGet(self, nested_keys: Iterable, default_val):
         d = self.JSON
         try:
             for k in nested_keys:
