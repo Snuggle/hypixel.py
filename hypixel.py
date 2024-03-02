@@ -51,10 +51,12 @@ def getJSON(typeOfRequest: str, **kwargs):
     for name, value in kwargs.items():
         if typeOfRequest == "player" and name == "uuid":
             name = UUIDType
-        requestEnd += '&{}={}'.format(name, value)
+        requestEnd += f"{'&' if requestEnd else ''}{name}={value}"
 
-    cacheURL = HYPIXEL_API_URL + '{}?{}'.format(typeOfRequest, requestEnd) # TODO: Lowercase
-    allURLS = [HYPIXEL_API_URL + '{}?{}'.format(typeOfRequest, requestEnd)] # Create request URL.
+    cacheURL = f"{HYPIXEL_API_URL}{typeOfRequest}?{requestEnd}"
+    # TODO: Maybe lowercase for cache. However, certain query param names are for some reason
+    # actually case sensitive, such as `byUuid` and `byName` (not sure if it's limited to these two).
+    allURLS = [cacheURL]
 
     # If url exists in request cache, and time hasn't expired...
     if cacheURL in requestCache and requestCache[cacheURL]['cacheTime'] > time():
