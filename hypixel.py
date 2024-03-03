@@ -6,8 +6,9 @@ __version__ = '0.8.0'
 
 from random import choice
 from time import time, sleep
+from datetime import datetime, timedelta
 from copy import deepcopy
-from typing import List, Iterable, Dict, Union
+from typing import List, Iterable, Dict, Union, Optional
 import grequests
 
 import leveling
@@ -38,8 +39,15 @@ class HypixelAPIError(Exception):
     """ Simple exception if something's gone very wrong and the program can't continue. """
     pass
 
+sleep_till: Optional[datetime] = None
 def getJSON(typeOfRequest: str, **kwargs) -> dict:
     """ This private function is used for getting JSON from Hypixel's Public API. """
+    global sleep_till
+
+    if sleep_till and (sleep_duration := (sleep_till - datetime.now()).total_seconds()) >= 0:
+        sleep(sleep_duration)
+    sleep_till = None
+
     requestEnd = ''
     api_key = choice(verified_api_keys) # Select a random API key from the list available.
 
@@ -70,10 +78,8 @@ def getJSON(typeOfRequest: str, **kwargs) -> dict:
             fullResponse = r
         response, responseHeaders = fullResponse.json(), fullResponse.headers
 
-        if 'RateLimit-Remaining' in responseHeaders:
-            remaining_allowed_requests = int(responseHeaders['RateLimit-Remaining'])
-            if remaining_allowed_requests <= 1:
-                sleep(int(responseHeaders['RateLimit-Reset']) + 1)
+        if 'RateLimit-Remaining' in responseHeaders and int(responseHeaders['RateLimit-Remaining']) <= 1:
+            sleep_till = datetime.now() + timedelta(seconds=int(responseHeaders['RateLimit-Reset'])+1)
 
         if not response['success']:
             raise HypixelAPIError(response)
